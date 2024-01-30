@@ -21,7 +21,6 @@
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-data-jpa</artifactId>
-    		<version>3.2.2</version>
 		</dependency>
 
 		<dependency>
@@ -35,7 +34,13 @@
     		<artifactId>mariadb-java-client</artifactId>
     		<version>3.3.2</version>
 		</dependency>
-
+		<!-- 熱部署 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -44,12 +49,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.example</groupId>
-			<artifactId>demo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<scope>3.1.2</scope>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
@@ -70,7 +70,13 @@
     		<artifactId>spring-data-jpa</artifactId>
     		<version>3.2.2</version>
 		</dependency>
-
+		
+		<!-- JDBC API -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+        
 	</dependencies>
 
 	<build>

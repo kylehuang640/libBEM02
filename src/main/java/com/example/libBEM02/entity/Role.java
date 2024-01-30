@@ -21,29 +21,4 @@ public class Role extends Base{
 	@Column(name = "Type")
 	private String Type;
 	
-	
-//	public int getID() {
-//		return ID;
-//	}
-//	public void setID(int ID) {
-//		this.ID = ID;
-//	}
-//	public String getTitle() {
-//		return Title;
-//	}
-//	public void setTitle(String Title) {
-//		this.Title = Title;
-//	}
-//	public String getDescription() {
-//		return Description;
-//	}
-//	public void  setDesciption(String Description) {
-//		this.Description = Description;
-//	}
-//	public String getType() {
-//		return Type;
-//	}
-//	public void setType(String Type) {
-//		this.Type = Type;
-//	}
 }

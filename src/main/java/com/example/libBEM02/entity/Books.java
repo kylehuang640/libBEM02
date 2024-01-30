@@ -3,8 +3,9 @@ package com.example.libBEM02.entity;
 import java.math.BigDecimal;
 
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -28,40 +29,4 @@ public class Books extends Base{
 	@Column(name = "SellPrice" , precision = 10, scale = 2)
 	private BigDecimal SellPrice;
 	
-//	public int getID() {
-//		return ID;
-//	}
-//	public void setID(int ID) {
-//		this.ID = ID;
-//	}
-//	public String getBookName() {
-//		return BookName;
-//	}
-//	public void setBookName(String BookName) {
-//		this.BookName = BookName;
-//	}
-//	public String getAuthor() {
-//		return Author;
-//	}
-//	public void setAuthor(String Author) {
-//		this.Author = Author;
-//	}
-//	public String getDescription() {
-//		return Description;
-//	}
-//	public void setDescription(String Description) {
-//		this.Description = Description;
-//	}
-//	public BigDecimal getListPrice() {
-//		return ListPrice;
-//	}
-//	public void setListPrice(BigDecimal ListPrice) {
-//		this.ListPrice = ListPrice;
-//	}
-//	public BigDecimal getSellPrice() {
-//		return SellPrice;
-//	}
-//	public void setSellPrice(BigDecimal SellPrice) {
-//		this.SellPrice = SellPrice;
-//	}
 }

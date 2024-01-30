@@ -26,35 +26,4 @@ public class OTP extends Base{
 	@Column(name = "OTPerror")
 	private Integer OTPerror;
 	
-	
-//	public int getOTPId() {
-//		return OTPId;
-//	}
-//	public void setOTPId(int OTPId) {
-//		this.OTPId = OTPId;
-//	}
-//	public String getOTPcode() {
-//		return OTPcode;
-//	}
-//	public void setOTPcode(String OTPcode) {
-//		this.OTPcode = OTPcode;
-//	}
-//	
-//	public String getOTPexpire() {
-//		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(OTPexpire);
-//	}
-//	public void setOTPexpire(Date OTPexpire) {
-//		 if (OTPexpire == null) {
-//		        throw new IllegalArgumentException("OTPexpire 不能為空");
-//		    }
-//
-//		    this.OTPexpire = OTPexpire;
-//	}
-//	
-//	public int getOTPerror() {
-//		return OTPerror;
-//	}
-//	public void setOTPerror(int OTPerror) {
-//		this.OTPerror = OTPerror;
-//	}
 }

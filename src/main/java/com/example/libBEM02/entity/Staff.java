@@ -26,41 +26,4 @@ public class Staff extends Base{
 	@Column(name = "Email")
 	private String Email;
 	
-	
-//	public int getID() {
-//		return ID;
-//	}
-//	public void setID(int ID) {
-//		this.ID = ID;
-//	}
-//	public String getStaffName() {
-//		return StaffName;
-//	}
-//	public void setStaffName(String StaffName) {
-//		this.StaffName = StaffName;
-//	}
-//	public String getAccount() {
-//		return Account;
-//	}
-//	public void setAccount(String Account) {
-//		this.Account = Account;
-//	}
-//	public String getPassword() {
-//		return Password;
-//	}
-//	public void setPassword(String Password) {
-//		this.Password = Password;
-//	}
-//	public String getPhoneNum() {
-//		return PhoneNum;
-//	}
-//	public void setPhoneNum(String PhoneNum) {
-//		this.PhoneNum = PhoneNum;
-//	}
-//	public String getEmail() {
-//		return Email;
-//	}
-//	public void setEmail(String Email) {
-//		this.Email = Email;
-//	}
 }
