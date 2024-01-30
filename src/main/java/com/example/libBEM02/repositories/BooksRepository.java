@@ -1,6 +1,5 @@
 package com.example.libBEM02.repositories;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +12,6 @@ import com.example.libBEM02.entity.Books;
 
 @Repository
 public interface BooksRepository extends JpaRepository<Books, Integer>{
-//	@Query(value = "SELECT * FROM Books b WHERE b.BookName = :BookName" ,nativeQuery = true)
-//	List<Books> findByBookName(@Param("BookName") String BookName);
+	@Query(value = "SELECT * FROM Books b WHERE b.BookName = :BookName" ,nativeQuery = true)
+	List<Books> findByBookName(@Param("BookName") String BookName);
 }

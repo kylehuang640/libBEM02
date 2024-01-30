@@ -7,7 +7,7 @@ import com.example.libBEM02.entity.Books;
 
 public interface BooksService {
 	
-	public Optional<Books> findByID(Integer ID);
+	public List<Books> findByBookName(String BookName);
 	
 	public Books insertBook(Books book);
 	

@@ -3,9 +3,7 @@ package com.example.libBEM02.entity;
 import java.math.BigDecimal;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -30,3 +28,4 @@ public class Books extends Base{
 	private BigDecimal SellPrice;
 	
 }
+

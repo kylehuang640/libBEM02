@@ -17,8 +17,8 @@ public class BooksServiceImpl implements BooksService{
 	BooksRepository booksRepository;
 	
 	@Override
-	public Optional<Books> findByID(Integer ID){
-		return booksRepository.findById(ID);
+	public List<Books> findByBookName(String BookName){
+		return booksRepository.findByBookName(BookName);
 	}
 	@Override
 	public Books insertBook(Books book) {
