@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.entity.Books;
 import com.example.libBEM02.service.BooksService;
 
@@ -27,7 +28,7 @@ public class BooksController {
 	
 	//request
 	@RequestMapping("/getBook")
-	public List<Books> getBook() {
+	public BooksDto getBook() {
 		return booksService.findByBookName("In The Sea");
 	}
 	//Delete
@@ -36,5 +37,9 @@ public class BooksController {
 		booksService.deleteBook(id);
 	}
 	//Create
-	
+	@PostMapping("/create")
+	public ResponseEntity<BooksDto> insertBook(@RequestBody BooksDto bd) {
+		BooksDto saveBd = booksService.insertBook(bd);
+		return new ResponseEntity<>(saveBd, HttpStatus.CREATED);
+	}
 }

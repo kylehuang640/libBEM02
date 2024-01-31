@@ -7,15 +7,15 @@ import com.example.libBEM02.entity.Books;
 
 public interface BooksService {
 	
-	public List<Books> findByBookName(String BookName);
+	public BooksDto findByBookName(String BookName);
 	
-	public Books insertBook(Books book);
+	public BooksDto insertBook(BooksDto bd);
 	
 	public void deleteBook(Integer ID);
 
     public Books updateBook(Books book);
     
-    //convert
-    public BooksDto convertToDto(Books books);
-    public Books convertToEntity(BooksDto booksDto);
+//    //convert
+//    private BooksDto convertToDto(Books books);
+//    private Books convertToEntity(BooksDto booksDto);
 }

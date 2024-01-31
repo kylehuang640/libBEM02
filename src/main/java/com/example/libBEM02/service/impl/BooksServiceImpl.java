@@ -18,12 +18,15 @@ public class BooksServiceImpl implements BooksService{
 	BooksRepository booksRepository;
 	
 	@Override
-	public List<Books> findByBookName(String BookName){
-		return booksRepository.findByBookName(BookName);
+	public BooksDto findByBookName(String BookName){
+		Books books = booksRepository.findByBookName(BookName);
+		return convertToDto(books);
 	}
 	@Override
-	public Books insertBook(Books book) {
-		return booksRepository.save(book);
+	public BooksDto insertBook(BooksDto bd) {
+		Books books = convertToEntity(bd);
+		Books saveBk = booksRepository.save(books);
+		return convertToDto(saveBk);
 	}
 	@Override
 	public void deleteBook(Integer ID) {
@@ -34,9 +37,9 @@ public class BooksServiceImpl implements BooksService{
         return booksRepository.save(book);
     }
     
+	
 	//將entity轉成dto
-	@Override
-	public BooksDto convertToDto(Books books) {
+	private BooksDto convertToDto(Books books) {
 		BooksDto bd = new BooksDto();
 		bd.setID(books.getID());
 		bd.setBookName(books.getBookName());
@@ -46,10 +49,8 @@ public class BooksServiceImpl implements BooksService{
 		bd.setSellPrice(books.getSellPrice());
 		return bd;
 	};
-	
 	//將dto轉成entity
-    @Override
-    public Books convertToEntity(BooksDto booksDto) {
+    private Books convertToEntity(BooksDto booksDto) {
     	Books bk = new Books();
     	bk.setID(booksDto.getID());
     	bk.setBookName(booksDto.getBookName());
