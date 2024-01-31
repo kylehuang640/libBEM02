@@ -1,15 +1,18 @@
 package com.example.libBEM02.service.impl;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.libBEM02.exception.ResourceNotFoundException;
 import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.entity.Books;
 import com.example.libBEM02.repositories.BooksRepository;
 import com.example.libBEM02.service.BooksService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BooksServiceImpl implements BooksService{
@@ -33,11 +36,19 @@ public class BooksServiceImpl implements BooksService{
         booksRepository.deleteById(ID);
     }
 	@Override
-    public Books updateBook(Books book) {
-        return booksRepository.save(book);
+    public void updateBook(Integer id,BooksDto bookDto) {
+		Books existingBook = booksRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("找不到ID為: " + id +" 的書"));
+        // 根據需求更新
+        existingBook.setBookName(bookDto.getBookName());
+        existingBook.setAuthor(bookDto.getAuthor());
+        existingBook.setDescription(bookDto.getDescription());
+        existingBook.setListPrice(bookDto.getListPrice());
+        existingBook.setSellPrice(bookDto.getSellPrice());
+        booksRepository.save(existingBook);
     }
     
-	
+	//convert-------------------------------------------
 	//將entity轉成dto
 	private BooksDto convertToDto(Books books) {
 		BooksDto bd = new BooksDto();

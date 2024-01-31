@@ -1,6 +1,6 @@
 package com.example.libBEM02.controller;
 
-import java.util.List;
+import java.util.List; 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +10,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.entity.Books;
+import com.example.libBEM02.repositories.BooksRepository;
 import com.example.libBEM02.service.BooksService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/Book")
 public class BooksController {
 	
 	@Autowired
@@ -31,15 +34,29 @@ public class BooksController {
 	public BooksDto getBook() {
 		return booksService.findByBookName("In The Sea");
 	}
+	//Request Test 
+    @RequestMapping("/getBook/{bookname}")
+    public ResponseEntity<BooksDto> get(@PathVariable String bookname){
+    	BooksDto books = booksService.findByBookName(bookname);
+    	return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+    
 	//Delete
 	@DeleteMapping("/deleteBook")
 	public void deleteBooks(Integer id){
 		booksService.deleteBook(id);
 	}
 	//Create
-	@PostMapping("/create")
-	public ResponseEntity<BooksDto> insertBook(@RequestBody BooksDto bd) {
-		BooksDto saveBd = booksService.insertBook(bd);
-		return new ResponseEntity<>(saveBd, HttpStatus.CREATED);
-	}
+	@PostMapping("/createBook")
+    public ResponseEntity<BooksDto> createBook(@RequestBody BooksDto bookDto) {
+        BooksDto createdBook = booksService.insertBook(bookDto);
+        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+    }
+	//update
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Void> updateBook(@PathVariable Integer id, @RequestBody BooksDto bookDto) {
+        booksService.updateBook(id, bookDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
 }

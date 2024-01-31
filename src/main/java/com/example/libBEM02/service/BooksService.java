@@ -13,9 +13,6 @@ public interface BooksService {
 	
 	public void deleteBook(Integer ID);
 
-    public Books updateBook(Books book);
+    public void updateBook(Integer id, BooksDto bookDto);
     
-//    //convert
-//    private BooksDto convertToDto(Books books);
-//    private Books convertToEntity(BooksDto booksDto);
 }
