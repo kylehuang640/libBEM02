@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.entity.Books;
 
 @Repository

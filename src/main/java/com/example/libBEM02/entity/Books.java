@@ -22,10 +22,10 @@ public class Books extends Base{
 	private String Author;
 	@Column(name = "Description")
 	private String Description;
-	@Column(name = "ListPrice" , precision = 10, scale = 2)
-	private BigDecimal ListPrice;
-	@Column(name = "SellPrice" , precision = 10, scale = 2)
-	private BigDecimal SellPrice;
+	@Column(name = "ListPrice" /*, precision = 10, scale = 2*/)
+	private Double ListPrice;
+	@Column(name = "SellPrice" /*, precision = 10, scale = 2*/)
+	private Double SellPrice;
 	
 }
 
