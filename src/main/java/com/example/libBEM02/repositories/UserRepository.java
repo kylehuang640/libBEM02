@@ -11,6 +11,9 @@ import com.example.libBEM02.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>{
-	@Query("select * from User u where u.Name = :username")
+	@Query(value = "SELECT * FROM User u WHERE u.Name = :username" , nativeQuery = true)
 	public User findByName(@Param("username") String username);
+	@Query(value = "SELECT * FROM User u WHERE u.LoginAccount = :loginAccount", nativeQuery = true)
+	public User findByLoginAccount(@Param("loginAccount") String LAcccount);
+	
 }
