@@ -1,6 +1,6 @@
 package com.example.libBEM02.controller;
 
-import java.util.List; 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.entity.Books;
+import com.example.libBEM02.exception.ResourceNotFoundException;
 import com.example.libBEM02.repositories.BooksRepository;
 import com.example.libBEM02.service.BooksService;
 
@@ -29,11 +30,12 @@ public class BooksController {
 	@Autowired
 	BooksService booksService;
 	
-	//request
-	@RequestMapping("/getBook")
-	public BooksDto getBook() {
-		return booksService.findByBookName("In The Sea");
-	}
+//	//request
+//	@RequestMapping("/getBook")
+//	public BooksDto getBook() {
+//		return booksService.findByBookName("In The Sea");
+//	}
+	
 	//Request Test 
     @RequestMapping("/getBook/{bookname}")
     public ResponseEntity<BooksDto> get(@PathVariable String bookname){
@@ -43,8 +45,9 @@ public class BooksController {
     
 	//Delete
 	@DeleteMapping("/deleteBook")
-	public void deleteBooks(Integer id){
+	public ResponseEntity<String> deleteBooks(Integer id){
 		booksService.deleteBook(id);
+		return ResponseEntity.ok("Delete Success!");
 	}
 	//Create
 	@PostMapping("/createBook")
@@ -54,9 +57,10 @@ public class BooksController {
     }
 	//update
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateBook(@PathVariable Integer id, @RequestBody BooksDto bookDto) {
+    public ResponseEntity<BooksDto> updateBook(@PathVariable Integer id, @RequestBody BooksDto bookDto) {
+    	BooksDto updateB = booksService.updateBook(id, bookDto);
         booksService.updateBook(id, bookDto);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(updateB);
     }
     
 }

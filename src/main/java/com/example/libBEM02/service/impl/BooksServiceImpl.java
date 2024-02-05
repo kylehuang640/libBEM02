@@ -1,6 +1,6 @@
 package com.example.libBEM02.service.impl;
 
-import java.util.List; 
+import java.util.List;  
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,15 @@ public class BooksServiceImpl implements BooksService{
 	}
 	@Override
 	public BooksDto insertBook(BooksDto bd) {
-		Books books = convertToEntity(bd);
+		
+		Books books = new Books();
+		books.setID(bd.getID());
+		books.setBookName(bd.getBookName());
+		books.setAuthor(bd.getAuthor());
+		books.setDescription(bd.getDescription());
+		books.setListPrice(bd.getListPrice());
+		books.setSellPrice(bd.getSellPrice());
+		
 		Books saveBk = booksRepository.save(books);
 		return convertToDto(saveBk);
 	}
@@ -36,18 +44,22 @@ public class BooksServiceImpl implements BooksService{
         booksRepository.deleteById(ID);
     }
 	@Override
-    public void updateBook(Integer id,BooksDto bookDto) {
+    public BooksDto updateBook(Integer id, BooksDto bookDto) {
 		Books existingBook = booksRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("找不到ID為: " + id +" 的書"));
         // 根據需求更新
+		existingBook.setID(bookDto.getID());
         existingBook.setBookName(bookDto.getBookName());
         existingBook.setAuthor(bookDto.getAuthor());
         existingBook.setDescription(bookDto.getDescription());
         existingBook.setListPrice(bookDto.getListPrice());
         existingBook.setSellPrice(bookDto.getSellPrice());
         booksRepository.save(existingBook);
+        
+        BooksDto b = convertToDto(existingBook);
+        return b;
     }
-    
+	
 	//convert-------------------------------------------
 	//將entity轉成dto
 	private BooksDto convertToDto(Books books) {
@@ -71,4 +83,5 @@ public class BooksServiceImpl implements BooksService{
     	bk.setSellPrice(booksDto.getSellPrice());
     	return bk;
     };
+    
 }

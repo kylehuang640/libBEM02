@@ -15,4 +15,5 @@ import com.example.libBEM02.entity.Books;
 public interface BooksRepository extends JpaRepository<Books, Integer>{
 	@Query(value = "SELECT * FROM Books b WHERE b.BookName = :BookName" ,nativeQuery = true)
 	Books findByBookName(@Param("BookName") String BookName);
+	
 }
