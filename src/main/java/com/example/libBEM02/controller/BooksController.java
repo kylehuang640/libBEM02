@@ -1,7 +1,6 @@
 package com.example.libBEM02.controller;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.List;  
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.libBEM02.dto.BooksDto;
-import com.example.libBEM02.entity.Books;
 import com.example.libBEM02.exception.ResourceNotFoundException;
-import com.example.libBEM02.repositories.BooksRepository;
 import com.example.libBEM02.service.BooksService;
 
 @RestController
@@ -38,10 +35,10 @@ public class BooksController {
     	return new ResponseEntity<>(books, HttpStatus.OK);
     }
 	
-	//Request Test 
+	//Request all data
     @RequestMapping("/get/All")
-    public List<Books> findAll(){
-    	List<Books> books = booksService.findAll();
+    public List<BooksDto> findAll(){
+    	List<BooksDto> books = booksService.findAll();
     	return books;
     }
     
@@ -53,8 +50,8 @@ public class BooksController {
 	}
 	//Create
 	@PostMapping("/create")
-    public ResponseEntity<BooksDto> createBook(@RequestParam Integer id, @RequestBody BooksDto bookDto) {
-        BooksDto bk = booksService.insertBook(id,bookDto);
+    public ResponseEntity<BooksDto> createBook(@RequestBody BooksDto bookDto) {
+        BooksDto bk = booksService.insertBook(bookDto);
         return new ResponseEntity<>(bk, HttpStatus.CREATED);
     }
 	//update

@@ -11,6 +11,7 @@ import com.example.libBEM02.entity.User;
 import com.example.libBEM02.service.UserService;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 //	@Autowired
 //	UserService userService;

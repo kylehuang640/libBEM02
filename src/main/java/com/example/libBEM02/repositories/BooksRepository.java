@@ -17,7 +17,7 @@ public interface BooksRepository extends JpaRepository<Books, Integer>{
 	@Query(value = "SELECT * FROM Books b WHERE b.BookName = :BookName" ,nativeQuery = true)
 	Books findByBookName(@Param("BookName") String BookName);
 	
-	@Query(value = "SELECT ID FROM Books WHERE ID = (SELECT MAX(ID) FROM Books)", nativeQuery = true)
-	Integer findMaxId();
+//	@Query(value = "SELECT ID FROM Books WHERE ID = (SELECT MAX(ID) FROM Books)", nativeQuery = true)
+//	Integer findMaxId();
 	
 }

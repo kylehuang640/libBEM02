@@ -1,5 +1,6 @@
 package com.example.libBEM02.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;  
 import java.util.Optional;
 
@@ -27,18 +28,16 @@ public class BooksServiceImpl implements BooksService{
 	}
 	
 	@Override
-	public List<Books> findAll() {
-		
-		List<Books> books = booksRepository.findAll();
-		
-		return books;
+	public List<BooksDto> findAll(){
+		List<BooksDto> bk = convertListToDto(booksRepository.findAll());
+		return bk;
 	}
 	
 	@Override
-	public BooksDto insertBook(Integer id,BooksDto bd) {
+	public BooksDto insertBook(BooksDto bd) {
 		
 		Books books = new Books();
-		books.setID(id);
+		books.setID(bd.getID());
 		books.setBookName(bd.getBookName());
 		books.setAuthor(bd.getAuthor());
 		books.setDescription(bd.getDescription());
@@ -92,5 +91,12 @@ public class BooksServiceImpl implements BooksService{
     	bk.setSellPrice(booksDto.getSellPrice());
     	return bk;
     };
- 
+    //將Entity List轉成Dto List
+    private List<BooksDto> convertListToDto(List<Books> bk){
+    	List<BooksDto> ret = new ArrayList(); 
+    	for( Books b : bk) {
+    		ret.add(convertToDto(b));
+    	}
+    	return ret;
+    }
 }

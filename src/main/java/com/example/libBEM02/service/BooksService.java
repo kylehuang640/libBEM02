@@ -9,11 +9,12 @@ public interface BooksService {
 	
 	public BooksDto findByBookName(String BookName);
 	
-	public List<Books> findAll();
+	public List<BooksDto> findAll();
 	
-	public BooksDto insertBook(Integer id,BooksDto bd);
+	public BooksDto insertBook(BooksDto bd);
 	
 	public void deleteBook(Integer ID);
 
     public BooksDto updateBook(Integer id, BooksDto bookDto);
+    
 }
