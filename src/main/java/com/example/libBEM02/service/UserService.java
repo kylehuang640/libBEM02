@@ -6,8 +6,16 @@ import com.example.libBEM02.dto.UserDto;
 import com.example.libBEM02.entity.User;
 
 public interface UserService {
-	public UserDto login(User user);
-	public Optional<String> register(UserDto ud);
 	
-	public User findUserByName(String username);
+	public UserDto loadUserByName(String username);
+	
+	public boolean login(String LoginAccout, String Password);
+	
+	public String register(UserDto ud);
+	
+//	public UserDto forgotPassword() {
+//		
+//	}
+	
+	public void deleteUser(Integer id);
 }

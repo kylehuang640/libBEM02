@@ -13,7 +13,11 @@ import com.example.libBEM02.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query(value = "SELECT * FROM User u WHERE u.Name = :username" , nativeQuery = true)
 	public User findByName(@Param("username") String username);
+	
 	@Query(value = "SELECT * FROM User u WHERE u.LoginAccount = :loginAccount", nativeQuery = true)
 	public User findByLoginAccount(@Param("loginAccount") String LAcccount);
 	
+	//測試email的使用情形
+	@Query(value = "SELECT * FROM User u WHERE u.Email = :Email" , nativeQuery = true)
+	public User findByEmail(@Param("Email") String Email);
 }
