@@ -25,11 +25,20 @@ public class BooksServiceImpl implements BooksService{
 		Books books = booksRepository.findByBookName(BookName);
 		return convertToDto(books);
 	}
+	
 	@Override
-	public BooksDto insertBook(BooksDto bd) {
+	public List<Books> findAll() {
+		
+		List<Books> books = booksRepository.findAll();
+		
+		return books;
+	}
+	
+	@Override
+	public BooksDto insertBook(Integer id,BooksDto bd) {
 		
 		Books books = new Books();
-		books.setID(bd.getID());
+		books.setID(id);
 		books.setBookName(bd.getBookName());
 		books.setAuthor(bd.getAuthor());
 		books.setDescription(bd.getDescription());
@@ -83,5 +92,5 @@ public class BooksServiceImpl implements BooksService{
     	bk.setSellPrice(booksDto.getSellPrice());
     	return bk;
     };
-    
+ 
 }

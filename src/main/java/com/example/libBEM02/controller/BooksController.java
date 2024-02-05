@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.libBEM02.dto.BooksDto;
@@ -30,30 +31,31 @@ public class BooksController {
 	@Autowired
 	BooksService booksService;
 	
-//	//request
-//	@RequestMapping("/getBook")
-//	public BooksDto getBook() {
-//		return booksService.findByBookName("In The Sea");
-//	}
-	
 	//Request Test 
-    @RequestMapping("/getBook/{bookname}")
+    @RequestMapping("/get/{bookname}")
     public ResponseEntity<BooksDto> get(@PathVariable String bookname){
     	BooksDto books = booksService.findByBookName(bookname);
     	return new ResponseEntity<>(books, HttpStatus.OK);
     }
+	
+	//Request Test 
+    @RequestMapping("/get/All")
+    public List<Books> findAll(){
+    	List<Books> books = booksService.findAll();
+    	return books;
+    }
     
 	//Delete
-	@DeleteMapping("/deleteBook")
+	@DeleteMapping("/delete")
 	public ResponseEntity<String> deleteBooks(Integer id){
 		booksService.deleteBook(id);
 		return ResponseEntity.ok("Delete Success!");
 	}
 	//Create
-	@PostMapping("/createBook")
-    public ResponseEntity<BooksDto> createBook(@RequestBody BooksDto bookDto) {
-        BooksDto createdBook = booksService.insertBook(bookDto);
-        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+	@PostMapping("/create")
+    public ResponseEntity<BooksDto> createBook(@RequestParam Integer id, @RequestBody BooksDto bookDto) {
+        BooksDto bk = booksService.insertBook(id,bookDto);
+        return new ResponseEntity<>(bk, HttpStatus.CREATED);
     }
 	//update
     @PutMapping("/update/{id}")
