@@ -19,5 +19,6 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	
 	//測試email的使用情形
 	@Query(value = "SELECT * FROM User u WHERE u.Email = :Email" , nativeQuery = true)
-	public User findByEmail(@Param("Email") String Email);
+	public User findByEmail(@Param("Email") String Email);	
+	
 }

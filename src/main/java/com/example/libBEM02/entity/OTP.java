@@ -26,4 +26,7 @@ public class OTP extends Base{
 	@Column(name = "OTPerror")
 	private Integer OTPerror;
 	
+	public OTP() {
+		super();
+	}
 }

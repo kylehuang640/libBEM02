@@ -15,4 +15,9 @@ public class UserDto {
 	private String Password;
 	private Integer Gender;
 	private String MailingAddress;
+	
+//	public UserDto(String LoginAccount, String Password){
+//		this.LoginAccount = LoginAccount;
+//		this.Password = Password;
+//	}
 }

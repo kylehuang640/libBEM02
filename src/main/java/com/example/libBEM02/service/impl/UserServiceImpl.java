@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.libBEM02.dto.StaffDto;
@@ -12,20 +16,44 @@ import com.example.libBEM02.dto.UserDto;
 import com.example.libBEM02.entity.Staff;
 import com.example.libBEM02.entity.User;
 import com.example.libBEM02.repositories.UserRepository;
-import com.example.libBEM02.service.UserService;
+
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserDetailsService{
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	//對比資料
-	@Override
-	public UserDto loadUserByName(String username) {
-		User u = userRepository.findByName(username);
-		return convertToDto(u);
-	};
+
+	@Bean
+    public UserDetailsService userDetailsService() {
+        return (username) -> {
+            User user = userRepository.findByEmail(username);
+            return new org.springframework.security.core.userdetails.User(
+                    user.getEmail(),
+                    user.getPassword(),
+                    new ArrayList<>()
+            );
+        };
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = Optional.ofNullable(userRepository.findByName(username));
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return null;
+    }
+    
+    // 使用名字查詢
+    public UserDto getUserByName(String userName) {
+        User user = userRepository.findByName(userName);
+        return convertToDto(user);
+    }
+    
+    //----------------------------
+	
 	//login
-	@Override
 	public boolean login(String LoginAccount ,String Password) {
 		User u = userRepository.findByLoginAccount(LoginAccount);
 		if(Password.equals(u.getPassword())) {
@@ -34,7 +62,6 @@ public class UserServiceImpl implements UserService{
 		return false;
 	};
 	//register
-	@Override
 	public String register(UserDto ud){
 		
 		if( userRepository.findByEmail(ud.getEmail())== null ) {
@@ -91,5 +118,5 @@ public class UserServiceImpl implements UserService{
 		u.setGender(ud.getGender());
 		u.setMailingAddress(ud.getMailingAddress());
 		return u;
-	};		    
+	}	    
 }
