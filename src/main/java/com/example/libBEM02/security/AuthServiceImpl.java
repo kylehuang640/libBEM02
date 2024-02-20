@@ -39,6 +39,7 @@ public class AuthServiceImpl {
 	}
 
 	public AuthenticationResponse login(AuthenticationRequest req) {
+		
 		//檢驗登入帳號、密碼
 		authenticationManager.authenticate
 			(new UsernamePasswordAuthenticationToken(req.getLoginAccount(), req.getPassword()));
@@ -48,7 +49,8 @@ public class AuthServiceImpl {
 
 		saveUserToken(user, jwtToken);
 		return AuthenticationResponse.builder()
-				.token(jwtToken).build();
+				.token(jwtToken)
+				.build();
 	}
 
 	// 儲存token

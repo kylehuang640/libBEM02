@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.libBEM02.security.Token.TokenRepository;
 import com.example.libBEM02.service.impl.UserServiceImpl;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -31,6 +32,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     @Autowired
     private final UserServiceImpl userService;
+    @Autowired
+    private final TokenRepository tokenRepository;
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -53,18 +56,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authToken.setDetails(
+                		new WebAuthenticationDetailsSource().buildDetails(request));
+                
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-//                SecurityContext context = SecurityContextHolder.createEmptyContext();
-//                context.setAuthentication(authToken);
-//                SecurityContextHolder.setContext(context);
-            }else {
-            	response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json");
-                String errorMessage = "Token has expired";
-                String jsonErrorMessage = "{\"status\": \"1\", \"message\": \"" + errorMessage + "\"}";
-                response.getWriter().write(jsonErrorMessage);
-                return;
             }
           }
           
