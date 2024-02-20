@@ -54,8 +54,8 @@ public class SecurityConfiguration{
     private final UserServiceImpl userService;
     
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-    	MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
+    public SecurityFilterChain securityFilterChain(HttpSecurity http/*, HandlerMappingIntrospector introspector*/) throws Exception {
+    	//MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
     	
     	//處理JWT
         http	.cors(AbstractHttpConfigurer::disable)
@@ -68,28 +68,10 @@ public class SecurityConfiguration{
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                //.formLogin(FL -> FL.loginPage("/auth/login").permitAll())
-                .logout(logout -> {logout
-                            .logoutUrl("/auth/logout")
-                            .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "GET"))
-                            .logoutSuccessHandler((request, response, authentication) -> {
-                                SecurityContextHolder.clearContext();
-                });
-        });
+                //.formLogin(FL -> FL.loginPage("/auth/login").permitAll()) 加入之後出現跨域問題，不太清楚
+                ;
         return http.build();
     }
-    
-//    //CORS跨域問題
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-//        configuration.setAllowedMethods(Arrays.asList("*"));
-//        configuration.setAllowedHeaders(Arrays.asList("*"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 
     // 加密註冊容器
     @Bean

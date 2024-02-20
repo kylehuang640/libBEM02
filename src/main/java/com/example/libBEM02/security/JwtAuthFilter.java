@@ -1,6 +1,7 @@
 package com.example.libBEM02.security;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -38,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     	final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userName;
-        if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer")) {
+        if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -47,17 +48,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         userName = jwtService.extractUserName(jwt);
         if (userName != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
+          
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userName);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
-                context.setAuthentication(authToken);
-                SecurityContextHolder.setContext(context);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+//                SecurityContext context = SecurityContextHolder.createEmptyContext();
+//                context.setAuthentication(authToken);
+//                SecurityContextHolder.setContext(context);
+            }else {
+            	response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json");
+                String errorMessage = "Token has expired";
+                String jsonErrorMessage = "{\"status\": \"1\", \"message\": \"" + errorMessage + "\"}";
+                response.getWriter().write(jsonErrorMessage);
+                return;
             }
-        }
+          }
+          
         filterChain.doFilter(request, response);
     }
 }

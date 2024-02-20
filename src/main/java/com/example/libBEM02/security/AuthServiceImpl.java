@@ -38,7 +38,6 @@ public class AuthServiceImpl {
 		return AuthenticationResponse.builder().token(jwtToken).build();
 	}
 
-	// 驗證、登入
 	public AuthenticationResponse login(AuthenticationRequest req) {
 		//檢驗登入帳號、密碼
 		authenticationManager.authenticate
