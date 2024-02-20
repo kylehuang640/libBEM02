@@ -34,25 +34,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, java.io.IOException {
-        final String authHeader = request.getHeader("Authorization");
+
+    	final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userEmail;
+        final String userName;
         if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUserName(jwt);
-        if (StringUtils.isNotEmpty(userEmail)
+        userName = jwtService.extractUserName(jwt);
+        if (userName != null
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.userDetailsService()
-                    .loadUserByUsername(userEmail);
+            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userName);
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
                 context.setAuthentication(authToken);
                 SecurityContextHolder.setContext(context);
             }

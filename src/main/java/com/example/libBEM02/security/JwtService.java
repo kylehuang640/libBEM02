@@ -20,7 +20,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
     
-    private String secretKey = "root";
+    private static final String secretKey = "root";
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -28,6 +28,13 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
+    }
+    
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 600 * 600))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -38,13 +45,6 @@ public class JwtService {
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
-    }
-
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 600 * 600))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
     private boolean isTokenExpired(String token) {

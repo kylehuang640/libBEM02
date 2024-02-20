@@ -18,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @AllArgsConstructor
 public class AuthServiceImpl {
 	private final UserRepository userRepository;
@@ -40,34 +39,31 @@ public class AuthServiceImpl {
 	}
 
 	// 驗證、登入
-	public AuthenticationResponse authenticate(AuthenticationRequest req) {
-		authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(req.getLoginAccount(), req.getPassword()));
-
-		var user = userRepository.findByLoginAccount(req.getLoginAccount());
+	public AuthenticationResponse login(AuthenticationRequest req) {
+		//檢驗登入帳號、密碼
+		authenticationManager.authenticate
+			(new UsernamePasswordAuthenticationToken(req.getLoginAccount(), req.getPassword()));
+		
+		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow();
 		var jwtToken = jwtService.generateToken(user);
-		revokeAllUserTokens(user);
+
 		saveUserToken(user, jwtToken);
 		return AuthenticationResponse.builder()
 				.token(jwtToken).build();
 	}
-	
-	//撤銷token
-	private void revokeAllUserTokens(User user) {
-		var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getID());
-		if (validUserTokens.isEmpty())
-			return;
-		validUserTokens.forEach(token -> {
-			token.setExpired(true);
-			token.setRevoked(true);
-		});
-		tokenRepository.saveAll(validUserTokens);
-	}
 
 	// 儲存token
 	private void saveUserToken(User user, String jwtToken) {
-		var token = Token.builder().user(user).token(jwtToken).tokenType(TokenType.BEARER).expired(false).revoked(false)
+		var token = Token
+				.builder()
+				.user(user)
+				.token(jwtToken)
+				.tokenType(TokenType.BEARER)
+				.expired(false)
+				.revoked(false)
 				.build();
 		tokenRepository.save(token);
 	}
+	
+	
 }

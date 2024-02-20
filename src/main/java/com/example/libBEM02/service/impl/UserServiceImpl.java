@@ -24,17 +24,24 @@ public class UserServiceImpl implements UserDetailsService{
 	private UserRepository userRepository;
 	//對比資料
 
+//	@Bean
+//    public UserDetailsService userDetailsService() {
+//        return (LoginAccount) -> {
+//            var user = userRepository.findByLoginAccount(LoginAccount).orElseThrow();
+//            return new org.springframework.security.core.userdetails.User(
+//                    user.getLoginAccount(),
+//                    user.getPassword(),
+//                    new ArrayList<>()
+//            );
+//        };
+//    }
+	
 	@Bean
-    public UserDetailsService userDetailsService() {
-        return (username) -> {
-            User user = userRepository.findByEmail(username);
-            return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
-                    user.getPassword(),
-                    new ArrayList<>()
-            );
-        };
-    }
+	public UserDetailsService userDetailsService() {
+	  return LoginAccount -> userRepository.findByLoginAccount(LoginAccount)
+	      .orElseThrow(() -> new UsernameNotFoundException("使用者帳號不存在!"));
+	}
+	
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -45,47 +52,6 @@ public class UserServiceImpl implements UserDetailsService{
         return null;
     }
     
-    // 使用名字查詢
-    public UserDto getUserByName(String userName) {
-        User user = userRepository.findByName(userName);
-        return convertToDto(user);
-    }
-    
-    //----------------------------
-	
-	//login
-	public boolean login(String LoginAccount ,String Password) {
-		User u = userRepository.findByLoginAccount(LoginAccount);
-		if(Password.equals(u.getPassword())) {
-			return true;
-		}
-		return false;
-	};
-	//register
-	public String register(UserDto ud){
-		
-		if( userRepository.findByEmail(ud.getEmail())== null ) {
-			if( userRepository.findByLoginAccount(ud.getLoginAccount())==null ) {
-				User u = new User();
-				u.setID(ud.getID());
-				u.setName(ud.getName());
-				u.setEmail(ud.getEmail());
-				u.setPhoneNum(ud.getPhoneNum());
-				u.setLoginAccount(ud.getLoginAccount());
-				u.setPassword(ud.getPassword());
-				u.setGender(ud.getGender());
-				u.setMailingAddress(ud.getMailingAddress());
-				
-				User CreateUser = userRepository.save(u);
-				return "註冊成功!";
-			}
-			return "帳號已被使用。";
-		}
-		return "Email已被註冊。";
-	};
-	
-	//forgot password
-	
 	
 	//delete
 	public void deleteUser(Integer id) {

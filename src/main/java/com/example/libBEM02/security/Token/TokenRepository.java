@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TokenRepository extends JpaRepository<Token, Integer>{
-	@Query(value = """
-            select t from Token t inner join User u on t.userId = u.ID where u.ID = :ID and (t.Expired = false or t.Revoked false)
-            """,nativeQuery = true)
+	@Query(value = "select t from Token t inner join User u on t.userId = u.ID where u.ID = :ID and (t.Expired = false or t.Revoked false)",nativeQuery = true)
     List<Token> findAllValidTokenByUser(@Param("ID") Integer id);
 
     Optional<Token> findByToken(String token);
+
+	
 }
