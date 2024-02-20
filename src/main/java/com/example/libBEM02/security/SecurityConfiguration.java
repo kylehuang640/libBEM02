@@ -61,15 +61,21 @@ public class SecurityConfiguration{
         http	.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                		.requestMatchers("/auth/login","/auth/register","/auth/logout").permitAll()
+                		.requestMatchers("/auth/login").permitAll()
                 		.requestMatchers("/v3/api-docs/**","/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                //.formLogin(FL -> FL.loginPage("/auth/login").permitAll()) 加入之後出現跨域問題，不太清楚
-                ;
+                //.formLogin(FL -> FL.loginProcessingUrl("/auth/login")) 
+                .logout(logout -> {logout
+                    .logoutUrl("/auth/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "GET"))
+                    .logoutSuccessHandler((request, response, authentication) -> {
+                        SecurityContextHolder.clearContext();
+                    	});
+                });
         return http.build();
     }
 

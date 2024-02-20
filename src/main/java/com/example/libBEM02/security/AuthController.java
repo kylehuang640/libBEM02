@@ -33,7 +33,6 @@ public class AuthController {
 	
 	@RequestMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        
 		return ResponseEntity.ok(authService.Register(request));
     }
 	

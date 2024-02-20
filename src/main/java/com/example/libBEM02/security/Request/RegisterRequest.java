@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-	private Integer Id;
+	//private Integer Id;
 	private String Name;
     private String LoginAccount;
     private String Password;
