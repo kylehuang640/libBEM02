@@ -89,7 +89,7 @@ public class StaffServiceImpl implements StaffService{
 	    };
 	    //將Entity List轉成Dto List
 	    private List<StaffDto> convertListToDto(List<Staff> sf){
-	    	List<StaffDto> ret = new ArrayList(); 
+	    	List<StaffDto> ret = new ArrayList<StaffDto>(); 
 	    	for( Staff s : sf) {
 	    		ret.add(convertToDto(s));
 	    	}

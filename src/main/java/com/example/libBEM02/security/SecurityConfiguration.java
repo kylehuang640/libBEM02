@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
@@ -53,9 +54,10 @@ public class SecurityConfiguration{
     @Autowired
     private final UserServiceImpl userService;
     
+    private final LogoutHandler logoutHandler;
+    
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http/*, HandlerMappingIntrospector introspector*/) throws Exception {
-    	//MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	
     	//處理JWT
         http	.cors(AbstractHttpConfigurer::disable)
@@ -65,17 +67,14 @@ public class SecurityConfiguration{
                 		.requestMatchers("/v3/api-docs/**","/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session
+                			.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                //.formLogin(FL -> FL.loginProcessingUrl("/auth/login")) 
-                .logout(logout -> {logout
-                    .logoutUrl("/auth/logout")
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "GET"))
-                    .logoutSuccessHandler((request, response, authentication) -> {
-                        SecurityContextHolder.clearContext();
-                    	});
-                });
+                .logout(logout -> logout
+                		.logoutUrl("/auth/logout")
+                		.addLogoutHandler(logoutHandler)
+                		.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()) );
         return http.build();
     }
 
@@ -85,17 +84,17 @@ public class SecurityConfiguration{
         return new BCryptPasswordEncoder();
     }
 
+    // 驗證類別註冊容器
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService.userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    }
-    // 驗證類別註冊容器
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
-        return config.getAuthenticationManager();
     }
 }

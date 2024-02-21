@@ -1,7 +1,9 @@
 package com.example.libBEM02.security;
 
+import java.io.IOException;
 import java.time.Instant;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,8 @@ import com.example.libBEM02.security.Request.RegisterRequest;
 import com.example.libBEM02.security.Response.AuthenticationResponse;
 import com.example.libBEM02.security.Token.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,6 +69,5 @@ public class AuthServiceImpl {
 				.build();
 		tokenRepository.save(token);
 	}
-	
 	
 }

@@ -23,22 +23,28 @@ public class JwtService {
     private static final String secretKey = "root";
 
     public String extractUserName(String token) {
-        return extractClaim(token, Claims::getSubject);
+    	try {
+            return extractClaim(token, Claims::getSubject);
+        }catch (ExpiredJwtException e){
+            return e.getClaims().getSubject();
+        }
     }
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
     
+    //簽發token
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
         		.setClaims(extraClaims)
         		.setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 600 * 600))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
-
+    //驗證token有效性，有效True、無效False
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -58,11 +64,20 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
-                .getBody();
+    	try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        }
+        catch (ExpiredJwtException e){
+            return e.getClaims();
+        }
     }
 
-    private Key getSigningKey() {
+    private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
