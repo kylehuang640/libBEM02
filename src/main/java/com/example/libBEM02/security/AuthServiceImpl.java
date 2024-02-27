@@ -58,8 +58,8 @@ public class AuthServiceImpl {
 						req.getPassword()
 				)
 		);
-		//尋找對應的帳密
-		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(() -> new IllegalArgumentException("帳號或密碼輸入錯誤！"));
+		//尋找對應的帳密  () -> new IllegalArgumentException("帳號或密碼輸入錯誤！"))
+		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow();
 		
 		var jwtToken = jwtService.generateToken(user);
 		saveUserToken(user, jwtToken);
