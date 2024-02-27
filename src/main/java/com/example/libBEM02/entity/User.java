@@ -2,6 +2,7 @@ package com.example.libBEM02.entity;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -31,9 +32,9 @@ public class User implements UserDetails{
 	@Column(name = "PhoneNum")
 	private String PhoneNum;
 	@Column(name = "LoginAccount")
-	private String LoginAccount;
+	private String loginAccount;
 	@Column(name = "Password")
-	private String Password;
+	private String password;
 	@Column(name = "Gender")
 	private Integer Gender;
 	@Column(name = "MailingAddress")
@@ -60,25 +61,25 @@ public class User implements UserDetails{
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	

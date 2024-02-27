@@ -1,14 +1,16 @@
 package com.example.libBEM02.service.impl;
 
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.libBEM02.dto.StaffDto;
@@ -16,18 +18,25 @@ import com.example.libBEM02.dto.UserDto;
 import com.example.libBEM02.entity.Staff;
 import com.example.libBEM02.entity.User;
 import com.example.libBEM02.repositories.UserRepository;
+import com.example.libBEM02.security.Request.ChangePasswordRequest;
+
+import lombok.RequiredArgsConstructor;
+
 
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService{
 	@Autowired
 	private UserRepository userRepository;
+	
+	
 	//對比資料
 
 //	@Bean
 //    public UserDetailsService userDetailsService() {
-//        return (LoginAccount) -> {
-//            var user = userRepository.findByLoginAccount(LoginAccount).orElseThrow();
+//        return (username) -> {
+//            User user = userRepository.findByLoginAccount(username).orElseThrow();
 //            return new org.springframework.security.core.userdetails.User(
 //                    user.getLoginAccount(),
 //                    user.getPassword(),
@@ -37,26 +46,21 @@ public class UserServiceImpl implements UserDetailsService{
 //    }
 	
 	@Bean
-	public UserDetailsService userDetailsService() {
-	  return LoginAccount -> userRepository.findByLoginAccount(LoginAccount)
-	      .orElseThrow(() -> new UsernameNotFoundException("使用者帳號不存在!"));
-	}
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByLoginAccount(username)
+                .orElseThrow(() -> new UsernameNotFoundException("使用者不存在!"));
+    }
 	
-
-    @Override
+	@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = Optional.ofNullable(userRepository.findByName(username));
+        Optional<User> user = userRepository.findByLoginAccount(username);
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new UsernameNotFoundException("使用者帳號:" + username +"不存在!");
         }
         return null;
     }
     
 	
-	//delete
-	public void deleteUser(Integer id) {
-		userRepository.deleteById(id);
-	};
 	
 	//convert-------------------------------------------
 	//將entity轉成dto

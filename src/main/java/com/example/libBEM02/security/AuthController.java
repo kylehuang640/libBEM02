@@ -1,17 +1,23 @@
 package com.example.libBEM02.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import java.util.UUID; 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.libBEM02.dto.UserDto;
+import com.example.libBEM02.exception.UserNotFoundException;
 import com.example.libBEM02.security.Request.AuthenticationRequest;
 import com.example.libBEM02.security.Request.RegisterRequest;
 import com.example.libBEM02.security.Response.AuthenticationResponse;
+import com.example.libBEM02.security.Response.GenericResponse;
+import com.example.libBEM02.service.impl.UserServiceImpl;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,33 +25,47 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-//@CrossOrigin
+@CrossOrigin
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 	
-	@Autowired
 	private final AuthServiceImpl authService;
-	
-	@Autowired
+
+	private final UserServiceImpl userService;
+
 	private final LogoutService logoutService;
 	
-	@RequestMapping("/register")
+	@PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
 		return ResponseEntity.ok(authService.Register(request));
     }
 	
-//	@CrossOrigin(origins = "http://localhost:8083")
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
     	return ResponseEntity.ok(authService.login(request));
     }
     
-    @PostMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    @PostMapping("/logout")	
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
-        return ResponseEntity.ok("已登出！");
+        return ResponseEntity.ok("Logout！");
     }
     
+    @PostMapping("/test")
+    public ResponseEntity<String> testPostRequest(@RequestBody AuthenticationRequest req)
+    {
+    	return ResponseEntity.ok(req.getLoginAccount());
+    }
+    
+    
+//    public ResponseEntity<GenericResponse> resetPassword(HttpServletRequest request, @RequestParam("Email") String mail) throws UserNotFoundException {
+//    	UserDto ud = userService.findByEmail(mail);
+//    	if(ud == null) {throw new UserNotFoundException();}
+//    	
+//    	String token = UUID.randomUUID().toString();
+//    	userService.createPasswordResetTokenForUser(ud ,token);
+//    	
+//    }
 }

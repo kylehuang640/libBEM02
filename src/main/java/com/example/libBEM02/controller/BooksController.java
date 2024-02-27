@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.exception.ResourceNotFoundException;
 import com.example.libBEM02.service.BooksService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/Book")
 public class BooksController {
@@ -36,7 +38,7 @@ public class BooksController {
     }
 	
 	//Request all data
-    @RequestMapping("/get/All")
+    @GetMapping("/get/All")
     public List<BooksDto> findAll(){
     	List<BooksDto> books = booksService.findAll();
     	return books;

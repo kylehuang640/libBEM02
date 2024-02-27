@@ -10,7 +10,7 @@ import lombok.NonNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
-    private String LoginAccount;
-    private String Password;
+public class ChangePasswordRequest {
+	private String newPassword;
+	private String confirmPassword;
 }

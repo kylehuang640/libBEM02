@@ -16,10 +16,16 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query(value = "SELECT * FROM User u WHERE u.Name = :username" , nativeQuery = true)
 	User findByName(@Param("username") String username);
 	
+	@Query(value = "SELECT * FROM User u WHERE u.Name = :username" , nativeQuery = true)
+	Optional<User> findByUsername(@Param("username") String username);
+	
 	@Query(value = "SELECT * FROM User u WHERE u.LoginAccount = :loginAccount", nativeQuery = true)
-	Optional<User> findByLoginAccount(@Param("loginAccount") String LAcccount);
+	Optional<User> findByLoginAccount(@Param("loginAccount") String LoginAcccount);
 	
 	//測試email的使用情形
-	//@Query(value = "SELECT * FROM User u WHERE u.Email = :Email" , nativeQuery = true)
-	//public User findByEmail(@Param("Email") String Email);
+	@Query(value = "SELECT * FROM User u WHERE u.Email = :Email" , nativeQuery = true)
+	User findByEmail(@Param("Email") String Email);
+	
+	@Query(value = "SELECT * FROM User u WHERE u.LoginAccount = :loginAccount", nativeQuery = true)
+	User findByloginAccount(@Param("loginAccount") String loginAccount);
 }

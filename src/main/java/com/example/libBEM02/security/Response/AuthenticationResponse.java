@@ -1,11 +1,12 @@
 	package com.example.libBEM02.security.Response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+	import com.fasterxml.jackson.annotation.JsonProperty;
+	import lombok.AllArgsConstructor;
+	import lombok.Builder;
+	import lombok.Data;
+	import lombok.NoArgsConstructor;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+	import java.util.Map;
 
 @Data
 @Builder
@@ -15,4 +16,5 @@ public class AuthenticationResponse {
 
 	@JsonProperty("token")
     private String token;
+	
 }
