@@ -46,17 +46,19 @@ public class User implements UserDetails{
 	
 	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of();
     }
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return LoginAccount;
+		return loginAccount;
 	}
 	
 	@Override
-    public String getPassword(){ return  Password; }
+    public String getPassword(){ 
+		return  password; 
+	}
 	
 	@Override
 	public boolean isAccountNonExpired() {

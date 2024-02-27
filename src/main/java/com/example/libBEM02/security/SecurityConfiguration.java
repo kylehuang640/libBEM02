@@ -17,7 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,6 +26,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.example.libBEM02.service.impl.UserServiceImpl;
 
@@ -36,35 +37,35 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration{
-    
-	@Autowired
+public class SecurityConfiguration {
+
+    @Autowired
     private final JwtAuthFilter jwtAuthFilter;
+
     @Autowired
     private final UserServiceImpl userService;
-    
+
     private final LogoutHandler logoutHandler;
-    
+
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    	
-    	//處理JWT
+        // 處理JWT
         http	.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                		.requestMatchers("/v3/api-docs/**","/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                			.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .userDetailsService(userService.userDetailsService())
                 .logout(logout -> logout
-                		.logoutUrl("/auth/logout")
-                		.addLogoutHandler(logoutHandler)
-                		.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()) )
-                ;
+                        .logoutUrl("/auth/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                );
         return http.build();
     }
 
@@ -73,8 +74,13 @@ public class SecurityConfiguration{
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     // 驗證類別註冊容器
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -82,22 +88,30 @@ public class SecurityConfiguration{
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+
+    // CORS配置
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
-        return config.getAuthenticationManager();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8083"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
-    
-    
-    //CORSconfig
+
+    // CORS過濾器
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-    	CorsConfiguration configuration = new CorsConfiguration();
-    	configuration.setAllowedOrigins(Arrays.asList("http://localhost:8083","http://localhost:8083/swagger-ui/index.html","/v3/api-docs/**"));
-    	configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-    	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    	source.registerCorsConfiguration("/**", configuration);
-    	return source;
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:8083");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
-    
 }

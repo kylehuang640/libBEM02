@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserDetailsService{
 	@Autowired
 	private UserRepository userRepository;
 	
+	private PasswordEncoder passwordEncoder;
 	
 	//對比資料
 
@@ -48,16 +49,22 @@ public class UserServiceImpl implements UserDetailsService{
 	@Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByLoginAccount(username)
-                .orElseThrow(() -> new UsernameNotFoundException("使用者不存在!"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 	
 	@Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByLoginAccount(username);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("使用者帳號:" + username +"不存在!");
+    public UserDetails loadUserByUsername(String loginAccount) throws UsernameNotFoundException {
+        User user = userRepository.findByloginAccount(loginAccount);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
         return null;
+    }
+	
+	//test login
+    public User getUser(String login) {
+    	User user = userRepository.findByloginAccount(login);
+    	return user;
     }
     
 	

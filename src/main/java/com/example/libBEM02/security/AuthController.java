@@ -1,7 +1,5 @@
 package com.example.libBEM02.security;
 
-import java.util.UUID; 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +17,7 @@ import com.example.libBEM02.security.Response.AuthenticationResponse;
 import com.example.libBEM02.security.Response.GenericResponse;
 import com.example.libBEM02.service.impl.UserServiceImpl;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,6 +56,13 @@ public class AuthController {
     {
     	return ResponseEntity.ok(req.getLoginAccount());
     }
+    
+//    @PostMapping("/log") //測試登入
+//    public String log(@RequestBody AuthenticationRequest request) {
+//    	return userService.getUser(request.getLoginAccount()).toString();
+//    	
+//    }
+    
     
     
 //    public ResponseEntity<GenericResponse> resetPassword(HttpServletRequest request, @RequestParam("Email") String mail) throws UserNotFoundException {

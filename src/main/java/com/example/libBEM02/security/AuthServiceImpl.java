@@ -1,6 +1,6 @@
 package com.example.libBEM02.security;
 
-import java.io.IOException;
+import java.io.IOException; 
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class AuthServiceImpl {
 		User user = User.builder()
 				.Name(req.getName())
 				.Email(req.getEmail())
-				.LoginAccount(req.getLoginAccount())
-				.Password(passwordEncoder.encode(req.getPassword()))
+				.loginAccount(req.getLoginAccount())
+				.password(passwordEncoder.encode(req.getPassword()))
 				.Gender(req.getGender())
 				.MailingAddress(req.getMailingAddress())
 				.build();
@@ -52,11 +52,14 @@ public class AuthServiceImpl {
 
 	public AuthenticationResponse login(AuthenticationRequest req) {
 		//檢驗登入帳號、密碼
-		authenticationManager.authenticate
-			(new UsernamePasswordAuthenticationToken(req.getLoginAccount(), req.getPassword()));
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+						req.getLoginAccount(), 
+						req.getPassword()
+				)
+		);
 		//尋找對應的帳密
-		var user = userRepository.findByLoginAccount(req.getLoginAccount())
-				.orElseThrow(() -> new IllegalArgumentException("帳號或密碼輸入錯誤！"));
+		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(() -> new IllegalArgumentException("帳號或密碼輸入錯誤！"));
 		
 		var jwtToken = jwtService.generateToken(user);
 		saveUserToken(user, jwtToken);
