@@ -1,6 +1,6 @@
 package com.example.libBEM02.entity;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column; 
 
 import jakarta.persistence.*;
 

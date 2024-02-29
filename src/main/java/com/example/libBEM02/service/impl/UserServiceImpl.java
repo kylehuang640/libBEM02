@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,12 @@ public class UserServiceImpl implements UserDetailsService{
 //        };
 //    }
 	
+	@Autowired
+	public UserServiceImpl(UserRepository userRepository,PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+	}
+	
 	@Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByLoginAccount(username)
@@ -58,7 +65,11 @@ public class UserServiceImpl implements UserDetailsService{
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return null;
+        return new org.springframework.security.core.userdetails.User(
+                user.getLoginAccount(),
+                passwordEncoder.encode(user.getPassword()),
+                new ArrayList<>()
+        );
     }
 	
 	//test login

@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import lombok.ToString;
 @Table(name = "User")
 @ToString
 public class User implements UserDetails{
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID",unique = true)
