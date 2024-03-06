@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.*;
@@ -45,6 +46,10 @@ public class User implements UserDetails{
 	
 	public User() {
 		
+	}
+	public User(String loginAccount, String password) {
+		this.loginAccount = loginAccount;
+		this.password = password;
 	}
 	
 	@Override

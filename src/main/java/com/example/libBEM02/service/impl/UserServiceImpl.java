@@ -35,34 +35,28 @@ public class UserServiceImpl implements UserDetailsService{
 	
 	private PasswordEncoder passwordEncoder;
 	
-	
+	public void save(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userRepository.save(user);
+	}
 	//對比資料
 	@Bean
     public UserDetailsService userDetailsService() {
-		this.passwordEncoder = new BCryptPasswordEncoder();
         return username -> userRepository.findByloginAccount(username);
 	}
 	
 	@Override
     public UserDetails loadUserByUsername(String loginAccount) throws UsernameNotFoundException {
 		User user = userRepository.findByloginAccount(loginAccount);
-        String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return new org.springframework.security.core.userdetails.User(
         		user.getLoginAccount(), 
-        		encodedPassword,
+        		passwordEncoder.encode(user.getPassword()),
         		null
         );
     }
-	
-	//save
-	public User saveUser(User user) {
-		String encodedPassword = passwordEncoder.encode(user.getPassword());
-		user.setPassword(encodedPassword);
-		return userRepository.save(user);
-	}
 	
 	//test login
     public User getUser(String login) {

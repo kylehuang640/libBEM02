@@ -29,7 +29,6 @@ public class AuthServiceImpl {
 	
 	private final UserRepository userRepository;
 	
-	private final PasswordEncoder passwordEncoder;
 	@Autowired
 	private final TokenRepository tokenRepository;
 	
@@ -38,9 +37,12 @@ public class AuthServiceImpl {
 	private final AuthenticationManager authenticationManager;
 	
 	private final UserServiceImpl userService;
+	
+	private PasswordEncoder passwordEncoder;
 
 	// 註冊
 	public AuthenticationResponse Register(RegisterRequest req) {
+		
 		// 建立一筆新的user
 		User user = User.builder()
 				.Name(req.getName())
@@ -60,12 +62,15 @@ public class AuthServiceImpl {
 	}
 	
 	public AuthenticationResponse login(AuthenticationRequest req) {
+		
 		UsernamePasswordAuthenticationToken authentication =
 				new UsernamePasswordAuthenticationToken(req.getLoginAccount(),passwordEncoder.encode(req.getPassword()) );
+		
+		//尋找對應的帳密  ()-> new IllegalArgumentException("帳號或密碼輸入錯誤！"))
+				var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow();
 		//檢驗登入帳號、密碼
 		authenticationManager.authenticate(authentication);
-		//尋找對應的帳密  ()-> new IllegalArgumentException("帳號或密碼輸入錯誤！"))
-		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow();
+		
 		var jwtToken = jwtService.generateToken(user);
 		saveUserToken(user, jwtToken);
 		return AuthenticationResponse.builder()
@@ -78,9 +83,10 @@ public class AuthServiceImpl {
 		var user = userRepository.findByloginAccount(req.getLoginAccount());
 		var jwt = jwtService.generateToken(user);
 		var enpa = passwordEncoder.encode(req.getPassword());
-		var encodedPass = new BCryptPasswordEncoder().encode(req.getPassword());
+		var encodedPass = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B).encode(req.getPassword());
+		var encPas = passwordEncoder.encode(req.getPassword());
 		// 检查密码是否与编码后的密码匹配
-		if(passwordEncoder.matches("123", encodedPass)) {return "1";} return "0";
+		if(encodedPass.equals(encPas)) {return "same";} return "not same";
 	}
 	
 	//authenticate and save the user
