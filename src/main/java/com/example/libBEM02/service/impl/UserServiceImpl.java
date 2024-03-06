@@ -10,14 +10,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.example.libBEM02.dto.StaffDto;
 import com.example.libBEM02.dto.UserDto;
 import com.example.libBEM02.entity.Staff;
 import com.example.libBEM02.entity.User;
+import com.example.libBEM02.exception.UserNotFoundException;
 import com.example.libBEM02.repositories.UserRepository;
 import com.example.libBEM02.security.Request.ChangePasswordRequest;
 
@@ -33,44 +35,34 @@ public class UserServiceImpl implements UserDetailsService{
 	
 	private PasswordEncoder passwordEncoder;
 	
+	
 	//對比資料
-
-//	@Bean
-//    public UserDetailsService userDetailsService() {
-//        return (username) -> {
-//            User user = userRepository.findByLoginAccount(username).orElseThrow();
-//            return new org.springframework.security.core.userdetails.User(
-//                    user.getLoginAccount(),
-//                    user.getPassword(),
-//                    new ArrayList<>()
-//            );
-//        };
-//    }
-	
-	@Autowired
-	public UserServiceImpl(UserRepository userRepository,PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
-		this.userRepository = userRepository;
-	}
-	
 	@Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByLoginAccount(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+		this.passwordEncoder = new BCryptPasswordEncoder();
+        return username -> userRepository.findByloginAccount(username);
+	}
 	
 	@Override
     public UserDetails loadUserByUsername(String loginAccount) throws UsernameNotFoundException {
-        User user = userRepository.findByloginAccount(loginAccount);
+		User user = userRepository.findByloginAccount(loginAccount);
+        String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
         return new org.springframework.security.core.userdetails.User(
-                user.getLoginAccount(),
-                passwordEncoder.encode(user.getPassword()),
-                new ArrayList<>()
+        		user.getLoginAccount(), 
+        		encodedPassword,
+        		null
         );
     }
+	
+	//save
+	public User saveUser(User user) {
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedPassword);
+		return userRepository.save(user);
+	}
 	
 	//test login
     public User getUser(String login) {
@@ -78,8 +70,6 @@ public class UserServiceImpl implements UserDetailsService{
     	return user;
     }
     
-	
-	
 	//convert-------------------------------------------
 	//將entity轉成dto
 	private UserDto convertToDto(User u) {

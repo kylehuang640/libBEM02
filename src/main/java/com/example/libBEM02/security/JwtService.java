@@ -1,4 +1,4 @@
-package com.example.libBEM02.security;
+	package com.example.libBEM02.security;
 
 import java.security.Key;
 import java.util.Date;
@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtService {
     
-    public static final String secretKey = "root";
+    public static final String secretKey = "77397A244326462948404D635166546A576E5A7234753778214125442A472D4B";
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);

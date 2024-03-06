@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,15 +28,15 @@ import lombok.AllArgsConstructor;
 public class AuthServiceImpl {
 	
 	private final UserRepository userRepository;
-	@Autowired
+	
 	private final PasswordEncoder passwordEncoder;
 	@Autowired
 	private final TokenRepository tokenRepository;
-	@Autowired
+	
 	private final JwtService jwtService;
-	@Autowired
+	
 	private final AuthenticationManager authenticationManager;
-	@Autowired
+	
 	private final UserServiceImpl userService;
 
 	// 註冊
@@ -58,59 +59,57 @@ public class AuthServiceImpl {
 				.build();
 	}
 	
+	public AuthenticationResponse login(AuthenticationRequest req) {
+		UsernamePasswordAuthenticationToken authentication =
+				new UsernamePasswordAuthenticationToken(req.getLoginAccount(),passwordEncoder.encode(req.getPassword()) );
+		//檢驗登入帳號、密碼
+		authenticationManager.authenticate(authentication);
+		//尋找對應的帳密  ()-> new IllegalArgumentException("帳號或密碼輸入錯誤！"))
+		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow();
+		var jwtToken = jwtService.generateToken(user);
+		saveUserToken(user, jwtToken);
+		return AuthenticationResponse.builder()
+				.token(jwtToken)
+				.build();
+	}
 	
-//	public AuthenticationResponse login(AuthenticationRequest req) {
-//		//檢驗登入帳號、密碼
-//		authenticationManager.authenticate(
-//				new UsernamePasswordAuthenticationToken(
-//						req.getLoginAccount(), 
-//						req.getPassword()
-//				)
-//		);
-//		//尋找對應的帳密  () -> new IllegalArgumentException("帳號或密碼輸入錯誤！"))
-//		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow();
-//		
-//		var jwtToken = jwtService.generateToken(user);
-//		saveUserToken(user, jwtToken);
-//		return AuthenticationResponse.builder()
-//				.token(jwtToken)
-//				.build();
-//	}
+	//test value
+	public String test(AuthenticationRequest req) {
+		var user = userRepository.findByloginAccount(req.getLoginAccount());
+		var jwt = jwtService.generateToken(user);
+		var enpa = passwordEncoder.encode(req.getPassword());
+		var encodedPass = new BCryptPasswordEncoder().encode(req.getPassword());
+		// 检查密码是否与编码后的密码匹配
+		if(passwordEncoder.matches("123", encodedPass)) {return "1";} return "0";
+	}
 	
 	//authenticate and save the user
-	public AuthenticationResponse login(AuthenticationRequest req) {
-		// Find user with corresponding login account (throw exception if not found)
-	    var user = userRepository.findByLoginAccount(req.getLoginAccount())
-	            .orElseThrow(() -> new IllegalArgumentException("Account or password is incorrect!"));
-	    
-	    // Check login credentials
-	    authenticationManager.authenticate(
-	            new UsernamePasswordAuthenticationToken(
-	                    req.getLoginAccount(),
-	                    passwordEncoder.encode(req.getPassword())
-	            )
-	    );
-
-	    
-
-	    // Encode password with Bcrypt
-	    String encodedPassword = passwordEncoder.encode(req.getPassword());
-
-	    // Check if the encoded password matches the user's password
-	    if (!passwordEncoder.matches(encodedPassword, user.getPassword())) {
-	        throw new IllegalArgumentException("Account or password is incorrect!");
-	    }
-
-	    // Generate JWT token
-	    var jwtToken = jwtService.generateToken(user);
-
-	    // Save user token
-	    saveUserToken(user, jwtToken);
-
-	    return AuthenticationResponse.builder()
-	            .token(jwtToken)
-	            .build();
-	}
+//	public AuthenticationResponse login(AuthenticationRequest req) {
+//		// Find user with corresponding login account (throw exception if not found)
+//	    var user = userRepository.findByLoginAccount(req.getLoginAccount())
+//	            .orElseThrow(() -> new IllegalArgumentException("Account or password is incorrect!"));
+//	    
+//	    // Check login credentials
+//	    authenticationManager.authenticate(
+//	            new UsernamePasswordAuthenticationToken(
+//	                    req.getLoginAccount(),
+//	                    req.getPassword()
+//	            )
+//	    );
+//	    // Encode password with Bcrypt
+////	    String encodedPassword = passwordEncoder.encode(req.getPassword());
+//	    // Check if the encoded password matches the user's password
+////	    if (!passwordEncoder.matches(encodedPassword, user.getPassword())) {
+////	        throw new IllegalArgumentException("Account or password is incorrect!");
+////	    }
+//	    // Generate JWT token
+//	    var jwtToken = jwtService.generateToken(user);
+//	    // Save user token
+//	    saveUserToken(user, jwtToken);
+//	    return AuthenticationResponse.builder()
+//	            .token(jwtToken)
+//	            .build();
+//	}
 
 	// 儲存token
 	private void saveUserToken(User user, String jwtToken) {
