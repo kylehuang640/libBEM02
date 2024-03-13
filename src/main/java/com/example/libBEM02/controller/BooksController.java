@@ -31,7 +31,7 @@ public class BooksController {
 	BooksService booksService;
 	
 	//Request Test 
-    @RequestMapping("/get/{bookname}")
+    @GetMapping("/get/{bookname}")
     public ResponseEntity<BooksDto> get(@PathVariable String bookname){
     	BooksDto books = booksService.findByBookName(bookname);
     	return new ResponseEntity<>(books, HttpStatus.OK);
@@ -39,16 +39,16 @@ public class BooksController {
 	
 	//Request all data
     @GetMapping("/get/All")
-    public List<BooksDto> findAll(){
+    public ResponseEntity<List<BooksDto>> findAll(){
     	List<BooksDto> books = booksService.findAll();
-    	return books;
+    	return new ResponseEntity<>(books, HttpStatus.OK);
     }
     
 	//Delete
 	@DeleteMapping("/delete")
 	public ResponseEntity<String> deleteBooks(Integer id){
 		booksService.deleteBook(id);
-		return ResponseEntity.ok("Delete Success!");
+		return new ResponseEntity<>("Book was successfully deleted!", HttpStatus.OK);
 	}
 	//Create
 	@PostMapping("/create")
@@ -61,7 +61,7 @@ public class BooksController {
     public ResponseEntity<BooksDto> updateBook(@PathVariable Integer id, @RequestBody BooksDto bookDto) {
     	BooksDto updateB = booksService.updateBook(id, bookDto);
         booksService.updateBook(id, bookDto);
-        return ResponseEntity.ok(updateB);
+        return new ResponseEntity<>(updateB, HttpStatus.OK);
     }
     
 }

@@ -2,6 +2,7 @@ package com.example.libBEM02.security;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,13 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-//        if(request.getServletPath().contains("/v3/api-docs") || request.getServletPath().contains("/swagger-ui")) {
-//        	filterChain.doFilter(request, response);
-//        	return;
-//        }
-    	String authHeader = request.getHeader("Authorization");
-    	String jwt = null;
-        String userAccount = null;
+    	String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         
         // without Jwt token or start with "Bearer ", then call filterChain.dofilter, handling those afterwards filter or functions
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -50,8 +45,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         	return;
         }
         
-        jwt = authHeader.substring(7); 	//extract those tokens after "Bearer "
-        userAccount = jwtService.extractUserName(jwt); //extract LoginAccount in the token
+        String jwt = authHeader.substring(7); 	//extract those tokens after "Bearer "
+        String userAccount = jwtService.extractUserName(jwt); //extract LoginAccount in the token
         // if username not null and current SecurityContext doesn't exist identity authentication
         if (userAccount != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // by using UserDetailsService to load User Details
@@ -64,13 +59,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 		null, 
                 		userDetails.getAuthorities()
                 );
-                authToken.setDetails( 
-                		new WebAuthenticationDetailsSource().buildDetails(request)
-                		);
+                authToken.setDetails( new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-            } else {
-            	return;
-            }
+            } 
         }
         filterChain.doFilter(request, response);
     }

@@ -1,8 +1,12 @@
 package com.example.libBEM02.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,50 +29,41 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-	
-	private final AuthServiceImpl authService;
-
-	private final UserServiceImpl userService;
-
-	private final LogoutService logoutService;
+	@Autowired
+	private AuthServiceImpl authService;
+	@Autowired
+	private UserServiceImpl userService;
+	@Autowired
+	private LogoutService logoutService;
 			
+	@Operation(summary = "註冊")
 	@PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
 		return ResponseEntity.ok(authService.Register(request));
     }
 	
-	@Operation(summary = "登入接口")
+	@Operation(summary = "登入")
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
-    	return ResponseEntity.ok(authService.login(request));
+		return ResponseEntity.ok(authService.login(request));
     }
     
+	@Operation(summary = "登出")
     @PostMapping("/logout")	
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
         return ResponseEntity.ok("Logout！");
     }
-    
+	
+	@Operation(summary = "查看token")
     @PostMapping("/test")
-    public String testPostRequest(@RequestBody AuthenticationRequest req)
-    {
-    	return authService.test(req);
+    public String testPostRequest(){
+    	return authService.test();
     }
-    
-//    @PostMapping("/log") //測試登入
-//    public String log(@RequestBody AuthenticationRequest request) {
-//    	return userService.getUser(request.getLoginAccount()).toString();
-//    	
-//    }
-    
-    
-    
-//    public ResponseEntity<GenericResponse> resetPassword(HttpServletRequest request, @RequestParam("Email") String mail) throws UserNotFoundException {
-//    	UserDto ud = userService.findByEmail(mail);
-//    	if(ud == null) {throw new UserNotFoundException();}
-//    	
-//    	String token = UUID.randomUUID().toString();
-//    	userService.createPasswordResetTokenForUser(ud ,token);
-//    	
-//    }
+	
+	@Operation(summary = "刪除token")
+    @DeleteMapping("/delete")
+    public String deleteTokenRequest() {
+    	return authService.deleteToken();
+    }
 }

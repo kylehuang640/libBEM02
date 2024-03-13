@@ -1,15 +1,14 @@
 package com.example.libBEM02.entity;
 
 import java.time.Instant;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,10 +45,6 @@ public class User implements UserDetails{
 	
 	public User() {
 		
-	}
-	public User(String loginAccount, String password) {
-		this.loginAccount = loginAccount;
-		this.password = password;
 	}
 	
 	@Override
@@ -93,8 +88,9 @@ public class User implements UserDetails{
 	}
 
 	
-
-	
-
+	/*User: LoginAccount: Password
+	 * look  | look      | 321
+	 * peter | peter@gmail.com| 1234
+	 * root  | root      | 123 */
 	
 }

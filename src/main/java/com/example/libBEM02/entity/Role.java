@@ -21,4 +21,7 @@ public class Role extends Base{
 	@Column(name = "Type")
 	private String Type;
 	
+	public Role() {	
+	}
+	
 }

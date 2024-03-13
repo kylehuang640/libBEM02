@@ -18,4 +18,8 @@ public class AuthenticationResponse {
     private String token;
 	
 	private String message;
+	
+	public AuthenticationResponse(String token) {
+		this.token = token;
+	}
 }
