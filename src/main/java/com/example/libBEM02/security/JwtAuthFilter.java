@@ -3,6 +3,7 @@ package com.example.libBEM02.security;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,10 +37,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserServiceImpl userService;
             
     @Override
-    public void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-    	final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public void doFilterInternal(@NonNull HttpServletRequest request,
+                                 @NonNull HttpServletResponse response,
+                                 @NonNull FilterChain filterChain) throws ServletException, IOException {
+    	final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userAccount;
         // without Jwt token or start with "Bearer ", then call filterChain.dofilter, handling those afterwards filter or functions

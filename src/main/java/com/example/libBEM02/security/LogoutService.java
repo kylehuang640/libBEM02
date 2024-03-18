@@ -26,7 +26,7 @@ public class LogoutService implements LogoutHandler {
             HttpServletResponse response,
             Authentication authentication
     ) {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String authHeader = request.getHeader("Authorization");
         final String jwt;
         //沒有攜帶token的請求
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

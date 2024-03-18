@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.internal.Function;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -53,18 +54,14 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
     
-//    public Boolean validateToken(String token, UserDetails userDetails) {
-//    	final String username = extractUserName(token);
-//    	return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) );
-//    }
-    
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    	Map<String, Object> claims = new HashMap<>();
+        return generateToken(claims, userDetails);
     }
     
     //簽發token
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-
+    	
     	return Jwts.builder()
         		.setClaims(extraClaims)
         		.setSubject(userDetails.getUsername())

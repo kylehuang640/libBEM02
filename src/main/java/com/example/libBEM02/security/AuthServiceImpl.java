@@ -2,15 +2,18 @@ package com.example.libBEM02.security;
 
 import java.io.IOException; 
 import java.util.Collections;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Service;
 
 import com.example.libBEM02.entity.User;
@@ -21,6 +24,10 @@ import com.example.libBEM02.security.Response.AuthenticationResponse;
 import com.example.libBEM02.security.Token.*;
 import com.example.libBEM02.service.impl.UserServiceImpl;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -66,7 +73,7 @@ public class AuthServiceImpl {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getLoginAccount(),req.getPassword()));
 		//find the relative user  ()-> new IllegalArgumentException("帳號或密碼輸入錯誤！")
 		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(()-> new IllegalArgumentException("LoginAccount is invalid！"));		
-		
+
 		var jwtToken = jwtService.generateToken(user);
 		saveUserToken(user, jwtToken);
 		return AuthenticationResponse.builder()

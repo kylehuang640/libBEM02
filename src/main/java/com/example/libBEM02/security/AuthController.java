@@ -44,7 +44,8 @@ public class AuthController {
 	@Operation(summary = "登入")
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
-		return ResponseEntity.ok(authService.login(request));
+		AuthenticationResponse resp = authService.login(request);
+		return ResponseEntity.ok(resp);
     }
     
 	@Operation(summary = "登出")
@@ -55,8 +56,8 @@ public class AuthController {
     }
 	
 	@Operation(summary = "查看token")
-    @PostMapping("/test")
-    public String testPostRequest(){
+    @PostMapping("/history")
+    public String tokenHistoryCheck(){
     	return authService.test();
     }
 	
@@ -65,5 +66,6 @@ public class AuthController {
     public String deleteTokenRequest() {
     	return authService.deleteToken();
     }
-	
+
+    
 }
