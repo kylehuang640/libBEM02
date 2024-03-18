@@ -4,9 +4,11 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-	
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.internal.Function;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JwtService {
-    
+	
     public static final String secretKey = "77397A244326462948404D635166546A576E5A7234753778214125442A472D4B";
-
+    
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -51,11 +53,10 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
     
-    public Boolean validateToken(String token, UserDetails userDetails) {
-    	final String username = extractUserName(token);
-    	return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) );
-    }
-    
+//    public Boolean validateToken(String token, UserDetails userDetails) {
+//    	final String username = extractUserName(token);
+//    	return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) );
+//    }
     
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
@@ -63,7 +64,8 @@ public class JwtService {
     
     //簽發token
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder()
+
+    	return Jwts.builder()
         		.setClaims(extraClaims)
         		.setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -83,7 +85,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
     
-    public String getToken (HttpServletRequest httpServletRequest) {
+    public String getToken(HttpServletRequest httpServletRequest) {
         final String bearerToken = httpServletRequest.getHeader("Authorization");
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
         {return bearerToken.substring(7,bearerToken.length()); } // The part after "Bearer "

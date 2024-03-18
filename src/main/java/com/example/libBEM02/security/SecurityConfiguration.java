@@ -51,7 +51,7 @@ public class SecurityConfiguration {
         http	.cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v2/api-docs","/v3/api-docs/**", "/swagger-ui/**","/auth/**").permitAll()
+                        .requestMatchers("/v3/api-docs","/v3/api-docs/**", "/swagger-ui/**","/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -62,8 +62,8 @@ public class SecurityConfiguration {
                         .logoutUrl("/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                );
-                
+                )
+                .httpBasic(hb->hb.disable());
         return http.build();
     }
     
@@ -82,7 +82,7 @@ public class SecurityConfiguration {
         return authenticationProvider;
     }
 
-    // CORS setup
+ /*   // CORS setup
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -116,5 +116,5 @@ public class SecurityConfiguration {
         ));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }
+    }*/
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.libBEM02.security.Request.AuthenticationRequest;
@@ -35,7 +34,7 @@ public class AuthController {
 	private UserServiceImpl userService;
 	@Autowired
 	private LogoutService logoutService;
-			
+	
 	@Operation(summary = "註冊")
 	@PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
@@ -52,7 +51,7 @@ public class AuthController {
     @PostMapping("/logout")	
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
-        return ResponseEntity.ok("Logout！");
+        return ResponseEntity.ok("Logout!");
     }
 	
 	@Operation(summary = "查看token")
@@ -66,4 +65,5 @@ public class AuthController {
     public String deleteTokenRequest() {
     	return authService.deleteToken();
     }
+	
 }

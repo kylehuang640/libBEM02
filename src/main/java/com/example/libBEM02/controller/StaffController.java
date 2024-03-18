@@ -24,7 +24,7 @@ public class StaffController {
 	StaffService staffService;
 	
 	//Request Test 
-    @RequestMapping("/get/{staffname}")
+    @PostMapping("/get/{staffname}")
     public ResponseEntity<StaffDto> get(@PathVariable String staffname){
     	StaffDto sd = staffService.findByStaffName(staffname);
     	return new ResponseEntity<>(sd, HttpStatus.OK);

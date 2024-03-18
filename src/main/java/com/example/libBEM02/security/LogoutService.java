@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
-    @Autowired
+
 	private final TokenRepository tokenRepository;
     
     @Override

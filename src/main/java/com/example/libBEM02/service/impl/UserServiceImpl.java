@@ -34,8 +34,10 @@ public class UserServiceImpl implements UserDetailsService{
 	//對比資料
 	@Bean
     public UserDetailsService userDetailsService() {
-        return new UserServiceImpl(userRepository);
-	}
+		//return new UserServiceImpl();
+        return username -> userRepository.findByLoginAccount(username)
+        		.orElseThrow(()-> new UsernameNotFoundException("Username not found!"));
+    }
 	
 	@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

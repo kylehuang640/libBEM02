@@ -65,7 +65,7 @@ public class AuthServiceImpl {
 		//authenticate request loginAccount and password
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getLoginAccount(),req.getPassword()));
 		//find the relative user  ()-> new IllegalArgumentException("帳號或密碼輸入錯誤！")
-		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(()-> new IllegalArgumentException("帳號或密碼輸入錯誤！"));		
+		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(()-> new IllegalArgumentException("LoginAccount is invalid！"));		
 		
 		var jwtToken = jwtService.generateToken(user);
 		saveUserToken(user, jwtToken);
@@ -78,8 +78,6 @@ public class AuthServiceImpl {
 	//test value
 	public String test( ) {
 		String list = token.findAll().toString();
-		list.replace("[", "=====");
-		list.replace("]", "=====");
 		return list;		
 	}
 	
@@ -101,6 +99,7 @@ public class AuthServiceImpl {
 				.build();
 		tokenRepository.save(token);
 	}
+	
 	
 	//generate the token that is using for password reset
 	public void createPasswordResetTokenForUser(User user, String token) {
