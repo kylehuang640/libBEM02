@@ -56,13 +56,12 @@ public class JwtService {
     
     public String generateToken(UserDetails userDetails) {
     	Map<String, Object> claims = new HashMap<>();
-    	claims.put("role", userDetails.getAuthorities());
+    	claims.put("authority", userDetails.getAuthorities());
         return generateToken(claims, userDetails);
     }
     
     //簽發token
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-    	
     	return Jwts.builder()
         		.setClaims(extraClaims)
         		.setSubject(userDetails.getUsername())
