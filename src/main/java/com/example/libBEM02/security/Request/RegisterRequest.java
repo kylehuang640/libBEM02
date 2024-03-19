@@ -19,4 +19,5 @@ public class RegisterRequest {
     private String Password;
     private Integer Gender;
     private String MailingAddress;
+    private String Role;
 }

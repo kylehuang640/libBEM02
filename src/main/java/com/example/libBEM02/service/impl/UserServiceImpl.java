@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserDetailsService{
 	
 	private final UserRepository userRepository;
 	
+	
 	// password encoding
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,9 +44,9 @@ public class UserServiceImpl implements UserDetailsService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByLoginAccount(username)
 				.orElseThrow(()-> new UsernameNotFoundException("username or password invalid!"+ username));
-		if(!user.getPassword().startsWith("$2y")){
-			user.setPassword(passwordEncoder().encode(user.getPassword()));
-		}
+//		if(!user.getPassword().startsWith("$2y")){
+//			user.setPassword(passwordEncoder().encode(user.getPassword()));
+//		}
 		return user;
     }
 	/* 將這段更換成直接回傳現有User

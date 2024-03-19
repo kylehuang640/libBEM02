@@ -63,9 +63,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     		null, 
                     		userDetails.getAuthorities()
                     );
-                    authToken.setDetails( new WebAuthenticationDetailsSource().buildDetails(request));
-                    context.setAuthentication(authToken);
-                    SecurityContextHolder.setContext(context);
+                authToken.setDetails( new WebAuthenticationDetailsSource().buildDetails(request));
+                context.setAuthentication(authToken);
+                SecurityContextHolder.setContext(context);
             }else {
             	response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json");

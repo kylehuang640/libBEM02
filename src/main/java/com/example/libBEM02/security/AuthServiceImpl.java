@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Service;
 
+import com.example.libBEM02.dto.UserDto;
 import com.example.libBEM02.entity.User;
 import com.example.libBEM02.repositories.UserRepository;
 import com.example.libBEM02.security.Request.AuthenticationRequest;
@@ -57,6 +58,7 @@ public class AuthServiceImpl {
 				.password(userService.passwordEncoder().encode(req.getPassword()))
 				.Gender(req.getGender())
 				.MailingAddress(req.getMailingAddress())
+				.Role(req.getRole())
 				.build();
 
 		var SaveUser = userRepository.save(user);
@@ -69,10 +71,14 @@ public class AuthServiceImpl {
 	}
 	
 	public AuthenticationResponse login(AuthenticationRequest req) {
+		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(()-> new IllegalArgumentException("LoginAccount is invalid！"));		
+		if(!user.getPassword().startsWith("$2y")){
+			user.setPassword(userService.passwordEncoder().encode(user.getPassword()));
+		}
 		//authenticate request loginAccount and password
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getLoginAccount(),req.getPassword()));
 		//find the relative user  ()-> new IllegalArgumentException("帳號或密碼輸入錯誤！")
-		var user = userRepository.findByLoginAccount(req.getLoginAccount()).orElseThrow(()-> new IllegalArgumentException("LoginAccount is invalid！"));		
+		
 
 		var jwtToken = jwtService.generateToken(user);
 		saveUserToken(user, jwtToken);
@@ -107,9 +113,40 @@ public class AuthServiceImpl {
 		tokenRepository.save(token);
 	}
 	
+	//forgot and reset
+	//concept here: in the request body, we need loginAccount but to identify user's identity, if it's correct, then we reset his password into what he entered.
+	public UserDto forgotPassword(String loginAccount) {
+		UserDto ud = convertToDto(userRepository.findByloginAccount(loginAccount));
+		return ud;
+	}
+	public void resetPassword(UserDto ud, String password) {
+		User user = convertToUser(ud);
+		user.setPassword(password);
+		userRepository.save(user);
+	}
 	
-	//generate the token that is using for password reset
-	public void createPasswordResetTokenForUser(User user, String token) {
-		
+	public UserDto convertToDto(User user) {
+		UserDto ud = new UserDto();
+		ud.setID(user.getID());
+		ud.setLoginAccount(user.getLoginAccount());
+		ud.setPassword(user.getPassword());
+		ud.setEmail(user.getEmail());
+		ud.setName(user.getName());
+		ud.setMailingAddress(user.getMailingAddress());
+		ud.setPhoneNum(user.getPhoneNum());
+		ud.setGender(user.getGender());
+		return ud;
+	}
+	public User convertToUser(UserDto user) {
+		User ud = new User();
+		ud.setID(user.getID());
+		ud.setLoginAccount(user.getLoginAccount());
+		ud.setPassword(user.getPassword());
+		ud.setEmail(user.getEmail());
+		ud.setName(user.getName());
+		ud.setMailingAddress(user.getMailingAddress());
+		ud.setPhoneNum(user.getPhoneNum());
+		ud.setGender(user.getGender());
+		return ud;
 	}
 }

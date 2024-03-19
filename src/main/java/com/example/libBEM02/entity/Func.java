@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter @Setter
 @Table(name = "Func")
 @ToString
-public class Func extends Base{
+public class Func {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

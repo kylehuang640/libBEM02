@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.libBEM02.dto.UserDto;
 import com.example.libBEM02.security.Request.AuthenticationRequest;
 import com.example.libBEM02.security.Request.RegisterRequest;
 import com.example.libBEM02.security.Response.AuthenticationResponse;
@@ -66,6 +67,14 @@ public class AuthController {
     public String deleteTokenRequest() {
     	return authService.deleteToken();
     }
-
-    
+	
+	@Operation(summary = "忘記密碼")
+	@PostMapping("/forgot")
+	public void forgotPassword(@RequestBody String LoginAccount,String NewPassword) {
+		UserDto ud = authService.forgotPassword(LoginAccount);
+		//after confirm his identity
+		//change user into new password
+		authService.resetPassword(ud, NewPassword);
+	}
+	
 }

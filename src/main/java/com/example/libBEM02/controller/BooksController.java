@@ -25,6 +25,8 @@ import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.exception.ResourceNotFoundException;
 import com.example.libBEM02.service.BooksService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/book")

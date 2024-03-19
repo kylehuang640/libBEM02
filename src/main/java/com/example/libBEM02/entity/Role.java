@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter @Setter
 @Table(name = "Role")
 @ToString
-public class Role extends Base{
+public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

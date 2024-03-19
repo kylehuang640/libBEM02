@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.libBEM02.dto.StaffDto;
-import com.example.libBEM02.service.StaffService;
+import com.example.libBEM02.service.impl.StaffServiceImpl;
 
 @RestController
 @RequestMapping("/staff")
 public class StaffController {
 	@Autowired
-	StaffService staffService;
+	StaffServiceImpl staffService;
 	
 	//Request Test 
     @PostMapping("/get/{staffname}")
@@ -31,6 +32,7 @@ public class StaffController {
     }
 	
 	//Request all data
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get/All")
     public List<StaffDto> findAll(){
     	List<StaffDto> staff = staffService.findAll();

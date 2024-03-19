@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter @Setter
 @Table(name = "Permission")
 @ToString
-public class Permission extends Base{
+public class Permission {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

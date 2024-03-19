@@ -13,7 +13,7 @@ import java.util.Date;
 @Getter @Setter
 @Table(name = "OTP")
 @ToString
-public class OTP extends Base{
+public class OTP {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "OTPId")

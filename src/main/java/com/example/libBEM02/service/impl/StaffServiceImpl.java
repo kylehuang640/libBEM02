@@ -12,24 +12,22 @@ import com.example.libBEM02.entity.Books;
 import com.example.libBEM02.entity.Staff;
 import com.example.libBEM02.exception.ResourceNotFoundException;
 import com.example.libBEM02.repositories.StaffRepository;
-import com.example.libBEM02.service.StaffService;
 
 @Service
-public class StaffServiceImpl implements StaffService{
+public class StaffServiceImpl{
 	@Autowired
 	StaffRepository staffRepository;
 	
-	@Override
 	public StaffDto findByStaffName(String StaffName) {
 		Staff sa = staffRepository.findByStaffName(StaffName);
 		return convertToDto(sa);
 	};
-	@Override
+	
 	public List<StaffDto> findAll(){
 		List<Staff> sa = staffRepository.findAll();
 		return convertListToDto(sa);
 	};
-	@Override
+	
 	public StaffDto insertStaff(StaffDto sd) {
 		Staff sf = new Staff();
     	sf.setID(sd.getID());
@@ -42,11 +40,11 @@ public class StaffServiceImpl implements StaffService{
 		Staff saveSF = staffRepository.save(sf);
 		return convertToDto(saveSF);
 	};
-	@Override
+	
 	public void deleteStaff(Integer ID) {
 		staffRepository.deleteById(ID);
 	};
-	@Override
+	
     public StaffDto updateStaff(Integer id, StaffDto staffDto) {
 		Staff existingStaff = staffRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("找不到ID為: " + id +" 的職員"));

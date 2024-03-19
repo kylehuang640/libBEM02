@@ -4,10 +4,12 @@ import java.time.Instant;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
@@ -42,6 +44,8 @@ public class User implements UserDetails{
 	private Integer Gender;
 	@Column(name = "MailingAddress")
 	private String MailingAddress;
+
+		private String Role;
 	
 	public User() {
 		
@@ -49,7 +53,7 @@ public class User implements UserDetails{
 	
 	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+		return List.of(new SimpleGrantedAuthority(Role));
     }
 	/*AUTHORITY
 	 * @Override
@@ -57,7 +61,6 @@ public class User implements UserDetails{
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
     */
-
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
@@ -94,9 +97,9 @@ public class User implements UserDetails{
 	}
 
 	
-	/*User: LoginAccount: Password
-	 * look  | look      | 321
+	/*User   : LoginAccount   : Password
+	 * look  | look           | 321
 	 * peter | peter@gmail.com| 1234
-	 * root  | root      | 123 */
+	 * root  | root           | 123 */
 	
 }

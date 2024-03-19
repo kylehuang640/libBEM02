@@ -18,7 +18,7 @@ import java.util.Date;
 @Getter @Setter
 @Table(name = "Log_Check")
 @ToString
-public class Log_Check extends Base{
+public class Log_Check {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "loginID")
