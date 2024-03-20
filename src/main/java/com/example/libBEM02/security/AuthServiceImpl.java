@@ -115,8 +115,8 @@ public class AuthServiceImpl {
 	
 	//forgot and reset
 	//concept here: in the request body, we need loginAccount but to identify user's identity, if it's correct, then we reset his password into what he entered.
-	public UserDto forgotPassword(String loginAccount) {
-		UserDto ud = convertToDto(userRepository.findByloginAccount(loginAccount));
+	public UserDto forgotPassword(String Email) {
+		UserDto ud = convertToDto(userRepository.findByEmail(Email));
 		return ud;
 	}
 	public void resetPassword(UserDto ud, String password) {

@@ -1,5 +1,8 @@
 package com.example.libBEM02.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,11 +73,17 @@ public class AuthController {
 	
 	@Operation(summary = "忘記密碼")
 	@PostMapping("/forgot")
-	public void forgotPassword(@RequestBody String LoginAccount,String NewPassword) {
-		UserDto ud = authService.forgotPassword(LoginAccount);
+	public UserDto forgotPassword(@RequestBody String Email) {
+		UserDto ud = authService.forgotPassword(Email);
 		//after confirm his identity
-		//change user into new password
-		authService.resetPassword(ud, NewPassword);
+		//send email to user, authenticate
+		return ud;
+	}
+	@Operation(summary = "重置密碼")
+	@PostMapping("/reset")
+	public void resetPassword(UserDto ud,String Password) {
+		//reset password
+		authService.resetPassword(ud, Password);
 	}
 	
 }
