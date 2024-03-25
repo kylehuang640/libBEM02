@@ -1,7 +1,7 @@
 package com.example.libBEM02;
 
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import com.example.libBEM02.security.AuthServiceImpl;
 import com.example.libBEM02.security.Request.AuthenticationRequest;
 import com.example.libBEM02.security.Request.RegisterRequest;
 import com.example.libBEM02.security.Response.AuthenticationResponse;
+import com.example.libBEM02.service.BooksService;
 
 
 @SpringBootTest
@@ -19,6 +20,11 @@ class LibBem02ApplicationTests {
 	RegisterRequest rr = new RegisterRequest();
 	@Autowired
 	private AuthServiceImpl authService;
+	@Autowired
+	private BooksService book;
+	
+	//if really have to use it, use @BeforeEach instead of @Before and it'll work!
+	//but it may produce a lot wasted execution
 	
 	public void Lsetup() {
 		auth.setLoginAccount("root");
@@ -36,29 +42,28 @@ class LibBem02ApplicationTests {
 		rr.setPhoneNum("88674820");
 	};
 	
-	@Before
 	public void setup() {
+		
 	}
 	
 	
 	@Test
 	void contextLoads() throws Exception{
 		//======================login test====================================
-		/*Lsetup();
-		authService.login(auth);*/
+		Lsetup();
+		String prin = authService.login(auth).toString();
+		System.out.print(prin);
 		//======================register test=================================
-		/*rrSetup();
+		rrSetup();
 		AuthenticationResponse au = authService.Register(rr);
-		System.out.print(au);*/
+		System.out.print(au);
 		//======================delete token test==============================
-		/*String deleteTK = authService.deleteToken();
-		System.out.println(deleteTK);*/
+//		String deleteTK = authService.deleteToken();
+//		System.out.println(deleteTK);
 		//======================check token test==============================
-		/*String checkToken = authService.test();
-		System.out.print(checkToken);*/
-		//======================
+//		String checkToken = authService.test();
+//		System.out.print(checkToken);
 		
-		//test for nothing
-//		System.out.println("==================================\n"+auth+"\n==================================");
+		
 	}
 }

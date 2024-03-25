@@ -5,18 +5,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.internal.Function;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
