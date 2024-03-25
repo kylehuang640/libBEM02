@@ -73,12 +73,13 @@ public class AuthController {
 	
 	@Operation(summary = "忘記密碼")
 	@PostMapping("/forgot")
-	public void forgotPassword(@RequestBody String Email) {
+	public UserDto forgotPassword(@RequestBody String Email) {
 		UserDto ud = authService.forgotPassword(Email);
 		//after confirm his identity
 		//send email to user, authenticate
+		return ud;
 	}
-	
+	@Operation(summary = "重置密碼")
 	@PostMapping("/reset")
 	public void resetPassword(UserDto ud,String Password) {
 		//reset password
