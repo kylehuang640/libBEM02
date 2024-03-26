@@ -10,3 +10,4 @@
 //public interface Role_PermissionRelationship_Repository extends JpaRepository<Role_PermissionRelationship, Integer>{
 //
 //}
+

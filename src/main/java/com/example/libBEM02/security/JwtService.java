@@ -54,7 +54,8 @@ public class JwtService {
         return generateToken(claims, userDetails);
     }
     
-    //簽發token
+    //generate token
+    //an hour default time duration of token
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
     	return Jwts.builder()
         		.setClaims(extraClaims)
@@ -64,13 +65,12 @@ public class JwtService {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    
-    //驗證token有效性，有效True、無效False
+    //authenticate validity of token
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
-
+    
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

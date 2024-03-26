@@ -1,7 +1,5 @@
 package com.example.libBEM02.entity;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

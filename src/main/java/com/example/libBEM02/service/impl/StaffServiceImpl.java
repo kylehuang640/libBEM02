@@ -6,9 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.libBEM02.dto.BooksDto;
 import com.example.libBEM02.dto.StaffDto;
-import com.example.libBEM02.entity.Books;
 import com.example.libBEM02.entity.Staff;
 import com.example.libBEM02.exception.ResourceNotFoundException;
 import com.example.libBEM02.repositories.StaffRepository;
@@ -47,8 +45,7 @@ public class StaffServiceImpl{
 	
     public StaffDto updateStaff(Integer id, StaffDto staffDto) {
 		Staff existingStaff = staffRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("找不到ID為: " + id +" 的職員"));
-        // 根據需求更新
+				.orElseThrow(() -> new ResourceNotFoundException("Cannot find employee whose ID:" + id ));
 		existingStaff.setID(staffDto.getID());
 		existingStaff.setStaffName(staffDto.getStaffName());
 		existingStaff.setAccount(staffDto.getAccount());
@@ -63,7 +60,7 @@ public class StaffServiceImpl{
 	
 	
 	//convert-------------------------------------------
-		//將entity轉成dto
+		//turn entity into dto
 		private StaffDto convertToDto(Staff sf) {
 			StaffDto sd = new StaffDto();
 			sd.setID(sf.getID());
@@ -74,7 +71,7 @@ public class StaffServiceImpl{
 			sd.setEmail(sf.getEmail());
 			return sd;
 		};
-		//將dto轉成entity
+		//turn dto into entity
 	    private Staff convertToEntity(StaffDto sd) {
 	    	Staff sf = new Staff();
 	    	sf.setID(sd.getID());
@@ -85,7 +82,7 @@ public class StaffServiceImpl{
 			sf.setEmail(sd.getEmail());
 	    	return sf;
 	    };
-	    //將Entity List轉成Dto List
+	    //turn Entity List into Dto List
 	    private List<StaffDto> convertListToDto(List<Staff> sf){
 	    	List<StaffDto> ret = new ArrayList<StaffDto>(); 
 	    	for( Staff s : sf) {

@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserDetailsService{
         return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y);
     }
 	
-	//對比資料
+	//analyze data
 	@Bean
     public UserDetailsService userDetailsService() {
 		//return new UserServiceImpl();
@@ -49,40 +49,39 @@ public class UserServiceImpl implements UserDetailsService{
 //		}
 		return user;
     }
-	/* 將這段更換成直接回傳現有User
+	/* 
 	 * return new org.springframework.security.core.userdetails.User(
     	user.getLoginAccount(), 
     	user.getPassword(),
     	null);*/
-    
 	
-	
-    
+    /*
 	//convert-------------------------------------------
-	//將entity轉成dto
-//	private UserDto convertToDto(User u) {
-//		UserDto ud = new UserDto();
-//		ud.setID(u.getID());
-//		ud.setName(u.getName());
-//		ud.setEmail(u.getEmail());
-//		ud.setPhoneNum(u.getPhoneNum());
-//		ud.setLoginAccount(u.getLoginAccount());
-//		ud.setPassword(u.getPassword());
-//		ud.setGender(u.getGender());
-//		ud.setMailingAddress(u.getMailingAddress());
-//		return ud;
-//	};
-//	//將dto轉成entity
-//	private User convertToEntity(UserDto ud) {
-//		User u = new User();
-//		u.setID(ud.getID());
-//		u.setName(ud.getName());
-//		u.setEmail(ud.getEmail());
-//		u.setPhoneNum(ud.getPhoneNum());
-//		u.setLoginAccount(ud.getLoginAccount());
-//		u.setPassword(ud.getPassword());
-//		u.setGender(ud.getGender());
-//		u.setMailingAddress(ud.getMailingAddress());
-//		return u;
-//	}	    
+	//turn entity into dto
+	private UserDto convertToDto(User u) {
+		UserDto ud = new UserDto();
+		ud.setID(u.getID());
+		ud.setName(u.getName());
+		ud.setEmail(u.getEmail());
+		ud.setPhoneNum(u.getPhoneNum());
+		ud.setLoginAccount(u.getLoginAccount());
+		ud.setPassword(u.getPassword());
+		ud.setGender(u.getGender());
+		ud.setMailingAddress(u.getMailingAddress());
+		return ud;
+	};
+	//turn dto into entity
+	private User convertToEntity(UserDto ud) {
+		User u = new User();
+		u.setID(ud.getID());
+		u.setName(ud.getName());
+		u.setEmail(ud.getEmail());
+		u.setPhoneNum(ud.getPhoneNum());
+		u.setLoginAccount(ud.getLoginAccount());
+		u.setPassword(ud.getPassword());
+		u.setGender(ud.getGender());
+		u.setMailingAddress(ud.getMailingAddress());
+		return u;
+	}
+	*/	    
 }

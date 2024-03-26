@@ -11,3 +11,4 @@
 //public interface Pemission_FuncRelationship_Repository extends JpaRepository<Permission_FuncRelationship, Integer>{
 //	
 //}
+
