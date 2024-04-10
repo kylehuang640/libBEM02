@@ -27,16 +27,19 @@ public class LogoutService implements LogoutHandler {
         final String jwt;
         //if request did not carry token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+        	return;
         }
         //get jwt from header
         jwt = authHeader.substring(7);
         var storedToken = tokenRepository.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
+        	//1.set token revoked and expired after logout
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
+            //2.delete token after logout
+//            tokenRepository.deleteAll();
             SecurityContextHolder.clearContext();
         }
     }

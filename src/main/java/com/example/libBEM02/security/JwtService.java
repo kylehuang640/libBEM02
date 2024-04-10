@@ -47,14 +47,13 @@ public class JwtService {
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-    
+    //generate token
     public String generateToken(UserDetails userDetails) {
     	Map<String, Object> claims = new HashMap<>();
     	claims.put("authority", userDetails.getAuthorities());
+    	//if hasRole, your data should contain Role_User like this.
         return generateToken(claims, userDetails);
     }
-    
-    //generate token
     //an hour default time duration of token
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
     	return Jwts.builder()

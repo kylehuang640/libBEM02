@@ -14,4 +14,7 @@ public interface TokenRepository extends JpaRepository<Token, Integer>{
     List<Token> findAllValidTokenByUser(@Param("ID") Integer id);
 
     Optional<Token> findByToken(String token);
+    
+    @Query(value = "DELETE FROM Token t WHERE t.Token = :token;")
+    void DeleteByToken(@Param("token") String token);
 }

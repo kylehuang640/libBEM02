@@ -54,8 +54,8 @@ public class BooksServiceImpl implements BooksService{
 	@Override
     public BooksDto updateBook(Integer id, BooksDto bookDto) {
 		Books existingBook = booksRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("找不到ID為: " + id +" 的書"));
-        // 根據需求更新
+				.orElseThrow(() -> new ResourceNotFoundException("cannot find the book which ID: " + id ));
+        // update according to the needs
 		existingBook.setID(bookDto.getID());
         existingBook.setBookName(bookDto.getBookName());
         existingBook.setAuthor(bookDto.getAuthor());
@@ -69,7 +69,7 @@ public class BooksServiceImpl implements BooksService{
     }
 	
 	//convert-------------------------------------------
-	//將entity轉成dto
+	//turn entity into dto
 	private BooksDto convertToDto(Books books) {
 		BooksDto bd = new BooksDto();
 		bd.setID(books.getID());
@@ -80,7 +80,7 @@ public class BooksServiceImpl implements BooksService{
 		bd.setSellPrice(books.getSellPrice());
 		return bd;
 	};
-	//將dto轉成entity
+	//turn dto into entity
     private Books convertToEntity(BooksDto booksDto) {
     	Books bk = new Books();
     	bk.setID(booksDto.getID());
@@ -91,7 +91,7 @@ public class BooksServiceImpl implements BooksService{
     	bk.setSellPrice(booksDto.getSellPrice());
     	return bk;
     };
-    //將Entity List轉成Dto List
+    //turn entity list into dto list
     private List<BooksDto> convertListToDto(List<Books> bk){
     	List<BooksDto> ret = new ArrayList(); 
     	for( Books b : bk) {
